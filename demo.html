@@ -115,29 +115,31 @@
   
     <div center horizontal layout>
       <div flex>Checked Test</div>
-      <at-form-checkbox id="checkedCheckbox" checked></at-form-checkbox>
-      <div>This checkbox is <span id="test1Value"></span></div>
+      <at-form-checkbox id="checkedCheckbox" value="true"></at-form-checkbox>
     </div>
     
     <div center horizontal layout>
       <div flex>Unchecked Test</div>
-      <at-form-checkbox id="uncheckedCheckbox"></at-form-checkbox>
-      <div>This checkbox is <span id="test2Value"></span></div>
+      <at-form-checkbox id="uncheckedCheckbox" value="false"></at-form-checkbox>
     </div>
 
   </section>
-  <script>
-    (function(){
-      var test1Value = document.getElementById("test1Value");
-      var checkedCheckbox = document.getElementById("checkedCheckbox")
-      test1Value.textContent = checkedCheckbox.value;
-      
-      var test1Value = document.getElementById("test2Value");
-      var uncheckedCheckbox = document.getElementById("uncheckedCheckbox")
-      test2Value.textContent = uncheckedCheckbox.value;
-      
-      debugger;
-    })();
-  </script>
+
+  <section>
+  
+    <h3>Atrribute disabled tests</h3>
+  
+    <div center horizontal layout>
+      <div flex>Checked Test</div>
+      <at-form-checkbox id="checkedCheckbox" value="true" disabled></at-form-checkbox>
+    </div>
+    
+    <div center horizontal layout>
+      <div flex>Unchecked Test</div>
+      <at-form-checkbox id="uncheckedCheckbox" value="false" disabled></at-form-checkbox>
+    </div>
+
+  </section>
+  
 </body>
 </html>

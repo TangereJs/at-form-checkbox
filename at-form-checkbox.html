@@ -84,18 +84,19 @@ To change the checbox unchecked color:
      * Fired when the checked state changes.
      *
      * @event core-change
-     */
+     */     
+    publish: {
+      value: {value: false, reflect: true}
+    },
     
-    publish:{
-      value:{
-        value: this.checked,
-        reflect:true
-      }
+    valueChanged: function() {
+      this.checked = this.value;
     },
     
     toggles: true,
-
+    
     checkedChanged: function() {
+      this.value = this.checked;
       var cl = this.$.checkbox.classList;
       cl.toggle('checked', this.checked);
       cl.toggle('unchecked', !this.checked);
