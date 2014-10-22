@@ -1,0 +1,143 @@
+<!--
+    @license
+    Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+    This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+    The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+    The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+    Code distributed by Google as part of the polymer project is also
+    subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<!doctype html>
+<html>
+<head>
+  <title>at-form-checkbox</title>
+  
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  
+  <script src="../webcomponentsjs/webcomponents.js"></script>
+  
+  <link rel="import" href="at-form-checkbox.html">
+  <link rel="import" href="../font-roboto/roboto.html">
+  
+  <style shim-shadowdom>
+  
+    body {
+      font-family: RobotoDraft, 'Helvetica Neue', Helvetica, Arial;
+      margin: 0;
+      padding: 24px;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-tap-highlight-color: rgba(0,0,0,0);
+      -webkit-touch-callout: none;
+    }
+    
+    at-form-checkbox {
+      padding: 20px 20px 20px 0;
+    }
+    
+    section {
+      width: 300px;
+    }
+    
+    at-form-checkbox.blue::shadow #ink[checked] {
+      color: #4285f4;
+    }
+    
+    at-form-checkbox.blue::shadow #checkbox.checked {
+      border-color: #4285f4;
+    }
+    
+  </style>
+  
+</head>
+<body unresolved>
+  
+  <div horizontal layout>
+    <at-form-checkbox></at-form-checkbox>
+    <div vertical layout>
+      <h4>Notifications</h4>
+      <div>Notify me about updates to apps or games that I've downloaded</div>
+    </div>
+  </div>
+  
+  <br>
+  
+  <div horizontal layout>
+    <at-form-checkbox checked></at-form-checkbox>
+    <div vertical layout>
+      <h4>Auto-updates</h4>
+      <div>Auto-update apps over wifi only</div>
+    </div>
+  </div>
+  
+  <br>
+  
+  <div horizontal layout>
+    <at-form-checkbox></at-form-checkbox>
+    <div vertical layout>
+      <h4>Clear search history</h4>
+      <div>Remove all the searches you have ever performed</div>
+    </div>
+  </div>
+  
+  <br>
+  <br>
+  <br>
+  
+  <section>
+  
+    <h3>Sound</h3>
+  
+    <div center horizontal layout>
+      <div flex>Touch sounds</div>
+      <at-form-checkbox class="blue" checked></at-form-checkbox>
+    </div>
+    
+    <div center horizontal layout>
+      <div flex>Screen lock sound</div>
+      <at-form-checkbox class="blue"></at-form-checkbox>
+    </div>
+    
+    <div center horizontal layout>
+      <div flex>Vibrate on touch</div>
+      <at-form-checkbox class="blue"></at-form-checkbox>
+    </div>
+  
+  </section>
+
+  <section>
+  
+    <h3>Atrribute value tests</h3>
+  
+    <div center horizontal layout>
+      <div flex>Checked Test</div>
+      <at-form-checkbox id="checkedCheckbox" checked></at-form-checkbox>
+      <div>This checkbox is <span id="test1Value"></span></div>
+    </div>
+    
+    <div center horizontal layout>
+      <div flex>Unchecked Test</div>
+      <at-form-checkbox id="uncheckedCheckbox"></at-form-checkbox>
+      <div>This checkbox is <span id="test2Value"></span></div>
+    </div>
+
+  </section>
+  <script>
+    (function(){
+      var test1Value = document.getElementById("test1Value");
+      var checkedCheckbox = document.getElementById("checkedCheckbox")
+      test1Value.textContent = checkedCheckbox.value;
+      
+      var test1Value = document.getElementById("test2Value");
+      var uncheckedCheckbox = document.getElementById("uncheckedCheckbox")
+      test2Value.textContent = uncheckedCheckbox.value;
+      
+      debugger;
+    })();
+  </script>
+</body>
+</html>
