@@ -41,6 +41,30 @@
     </div>
   </div>
 
+  <div horizontal layout>
+    <div vertical layout>
+      <h4>Value echo</h4>
+      <at-form-checkbox id="observed" label="Change value to see" slider></at-form-checkbox>
+    </div>
+    <div vertical layout>
+      <p>Value echo: <span id="value"></span>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('WebComponentsReady', function () {
+      var observed = document.getElementById('observed');
+      var valueSpan = document.getElementById('value');
+
+      valueSpan.innerHTML = observed.value;
+
+      observed.addEventListener('change', function (event) {
+        valueSpan.innerHTML = observed.value;
+      });
+    });
+  </script>
+
   <br>
   <br>
   <br>

@@ -41,16 +41,21 @@
       value: {
         type: String,
         value: "false",
+        reflect: true,
+        observer: 'valueChanged'
       }
     },
     _moduleInstance: undefined,
     valueChanged: function (newValue, oldValue) {
       if (this.value === "true") {
-        this._moduleInstance.check();
+        if (this._moduleInstance !== undefined) {
+          this._moduleInstance.check();
+        }
       } else if (this.value === "false") {
-        this._moduleInstance.uncheck();
+        if (this._moduleInstance !== undefined) {
+          this._moduleInstance.uncheck();
+        }
       }
-
       this.fire('change', this.value);
     },
     ready: function () {
@@ -60,13 +65,13 @@
       if (this.slider) {
         this.$.uiCheckbox.classList.add('slider');
       }
-
+      var _self = this;
       var settings = {
         onChecked: function () {
-          this.value = "true";
+          _self.value = "true";
         },
         onUnchecked: function () {
-          this.value = "false";
+          _self.value = "false";
         }
       };
       this._moduleInstance = new atFormCheckbox(this, settings);
@@ -80,48 +85,16 @@
     }
   });
 
-  (function (dataInterface) {
-    var _data = {};
-    dataInterface.setData = function (key, value) {
-      if (key !== undefined) {
-        _data[key] = value;
-      }
-    };
-    dataInterface.getData = function (key) {
-      if (key !== undefined) {
-        return _data[key];
-      }
-    };
-    dataInterface.removeData = function (key) {
-      if (key !== undefined) {
-        delete _data[key];
-      }
-    };
-  })(window.atFormData = window.atFormData || {});
-
   (function (window, document, dataInterface, undefined) {
     "use strict";
 
     var module = window.atFormCheckbox = function (polymerElement, userSettings) {
-      //      debugger;
-      var
-        moduleSelector = '', // moduleSelector is used in display method to display title; TODO maybe become parameter
-
-        time = new Date().getTime(), // current time
-        performance = [],
-
-        query = arguments[0],
-        methodInvoked = (typeof query == 'string'),
-        queryArguments = [].slice.call(arguments, 1),
-        returnedValue;
-
       var settings = this.settings = atFormCheckboxUtil.extend(true, {}, atFormCheckbox.settings, userSettings);
 
       var
         className = this.className = settings.className,
         namespace = settings.namespace,
         selector = settings.selector,
-        error = settings.error,
 
         eventNamespace = '.' + namespace,
         moduleNamespace = 'module-' + namespace,
@@ -135,21 +108,14 @@
 
       this.initialize();
 
-      // this is where checkbox is finally initialized
-      if (methodInvoked) {
-        this.invoke(query);
-      }
-
       // end of the function
-      return (returnedValue !== undefined) ? returnedValue : this;
+      return this;
     }
 
     module.prototype.initialize = function () {
-      // in this function this is the same as module
-      this.verbose('Initializing checkbox', this.settings);
-
       this.initObjects();
 
+      // in this function this is the same as module
       // we do not need to create a label becase we always have label
       //          module.create.label();
       this.add.events();
@@ -171,7 +137,6 @@
     }
 
     module.prototype.destroy = function () {
-      this.verbose('Destroying module');
       this.remove.events();
     }
 
@@ -188,27 +153,12 @@
     module.prototype.observeChanges = function () {
       if ('MutationObserver' in window) {
         this.observer = new MutationObserver(function (mutations) {
-          this.debug('DOM tree modified, updating selector cache');
           this.refresh();
         });
         this.observer.observe(this.element, {
           childList: true,
           subtree: true
         });
-        this.debug('Setting up mutation observer', this.observer);
-      }
-    }
-
-    module.prototype.attachEvents = function (selector, event) {
-      var
-        $element = $(selector);
-      event = $.isFunction(this[event]) ? this[event] : this.toggle;
-      if ($element.length > 0) {
-        this.debug('Attaching checkbox events to element', selector, event);
-        $element
-          .on('click' + eventNamespace, event);
-      } else {
-        this.error(error.notFound);
       }
     }
 
@@ -225,13 +175,11 @@
                 escape: 27
               };
             if (key == keyCode.escape) {
-              _self.verbose('Escape key pressed blurring field');
               var blurEvent = document.createEvent('HTMLEvents');
               blurEvent.initEvent('blur', false, false);
               _self.$module.dispatchEvent(blurEvent);
             }
             if (!event.ctrlKey && (key == keyCode.enter || key == keyCode.space)) {
-              _self.verbose('Enter key pressed, toggling checkbox');
               _self.toggle.call(this);
               event.preventDefault();
             }
@@ -274,22 +222,6 @@
           }
         }
 
-        this.create = {
-          // this function is not needed since component will always have label
-          label: function () {
-            // if there is a label element above $input
-            if (_self.$input.prevAll(selector.label).length > 0) {
-              // detach label from the html tree and insert it after $input
-              $input.prev(selector.label).detach().insertAfter(_self.$input);
-              _self.debug('Moving existing label', _self.$label);
-            } else if (!_self.has.label()) {
-              // if label doesn't exist, create one and insert it after $input
-              _self.$label = $('<label>').insertAfter(_self.$input);
-              _self.debug('Creating label', _self.$label);
-            }
-          }
-        }
-
         this.has = {
           label: function () {
             return (_self.$label.length > 0);
@@ -298,7 +230,6 @@
 
         this.add = {
           events: function () {
-            _self.verbose('Attaching checkbox events');
             _self.$module.addEventListener('click', _self.toggle);
             _self.$input.addEventListener('keydown', _self.event.keydown);
           }
@@ -307,31 +238,17 @@
         this.remove = {
           checked: function () {
             _self.$module.classList.remove(_self.className.checked);
-            //            $module.removeClass(className.checked);
           },
           events: function () {
-            _self.debug('Removing events');
             _self.$module.removeEventListener('click', _self.toggle);
-            //            $module
-            //              .off(eventNamespace);
-            //        dataInterface.removeData(moduleNamespace); <-- this is not needed
             _self.$input.removeEventListener('keydown', _self.event.keydown);
-            //            $input
-            //              .off(eventNamespace, module.event.keydown);
-            // I checked through the code and didn't find a place where events are attached to the label
-            // so there is no need to detach events from it
-            //            $label
-            //              .off(eventNamespace);
           }
         }
 
         this.toggle = function (event) {
           if (!_self.can.change()) {
-            console.log(_self.can.change());
-            _self.debug('Checkbox is read-only or disabled, ignoring toggle');
             return;
           }
-          _self.verbose('Determining new checkbox state');
           if (_self.is.unchecked()) {
             _self.check();
           } else if (_self.is.checked() && _self.can.uncheck()) {
@@ -341,38 +258,23 @@
 
       } // end of initObjects
 
-    //    module.prototype.add = {
-    //      events: function () {
-    //        this.verbose('Attaching checkbox events');
-    //        $module.addEventListener('click', this.toggle);
-    //        $input.addEventListener('keydown', this.event.keydown);
-    //        //            $module
-    //        //              .on('click' + eventNamespace, module.toggle)
-    //        //              .on('keydown' + eventNamespace, selector.input, module.event.keydown);            
-    //      }
-    //    }
-
     module.prototype.enable = function () {
-      module.debug('Enabling checkbox functionality');
       $module.classList.remove(className.disabled);
-      //          $module.removeClass(className.disabled);
       $input.prop('disabled', false);
       settings.onEnabled.call($input.get());
     }
 
     module.prototype.disable = function () {
-      this.debug('Disabling checkbox functionality');
       this.$module.classList.add(this.className.disabled);
       this.$input.setAttribute('disabled', 'true');
       this.settings.onDisabled.call(this.$input);
     }
 
     module.prototype.check = function () {
-      this.debug('Enabling checkbox', this.$input);
       this.$input.setAttribute('checked', 'true');
 
       var changeEvent = document.createEvent('HtmlEvents');
-      changeEvent.initEvent('change', true, true);
+      changeEvent.initEvent('change', false, false);
       this.$input.dispatchEvent(changeEvent);
 
       this.set.checked();
@@ -386,11 +288,10 @@
     }
 
     module.prototype.uncheck = function () {
-      this.debug('Disabling checkbox');
       this.$input.removeAttribute('checked');
 
       var changeEvent = document.createEvent('HtmlEvents');
-      changeEvent.initEvent('change', true, true);
+      changeEvent.initEvent('change', false, false);
       this.$input.dispatchEvent(changeEvent);
 
       this.remove.checked();
@@ -402,159 +303,10 @@
       this.settings.onUnchecked.call(this.$input);
     }
 
-
-
-    module.prototype.setting = function (name, value) {
-      module.debug('Changing setting', name, value);
-      if ($.isPlainObject(name)) {
-        $.extend(true, settings, name);
-      } else if (value !== undefined) {
-        settings[name] = value;
-      } else {
-        return settings[name];
-      }
-    }
-    module.prototype.internal = function (name, value) {
-      if ($.isPlainObject(name)) {
-        $.extend(true, module, name);
-      } else if (value !== undefined) {
-        module[name] = value;
-      } else {
-        return module[name];
-      }
-    }
-    module.prototype.debug = function () {
-      if (this.settings.debug) {
-        if (this.settings.performance) {
-          this.performance.log(arguments);
-        } else {
-          this.debug = Function.prototype.bind.call(console.info, console, settings.name + ':');
-          this.debug.apply(console, arguments);
-        }
-      }
-    }
-    module.prototype.verbose = function () {
-      if (this.settings.verbose && this.settings.debug) {
-        if (this.settings.performance) {
-          this.performance.log(arguments);
-        } else {
-          this.verbose = Function.prototype.bind.call(console.info, console, settings.name + ':');
-          this.verbose.apply(console, arguments);
-        }
-      }
-    }
-    module.prototype.error = function () {
-      module.error = Function.prototype.bind.call(console.error, console, settings.name + ':');
-      module.error.apply(console, arguments);
-    }
-    module.prototype.performance = {
-      log: function (message) {
-        var
-          currentTime,
-          executionTime,
-          previousTime;
-        if (settings.performance) {
-          currentTime = new Date().getTime();
-          previousTime = time || currentTime;
-          executionTime = currentTime - previousTime;
-          time = currentTime;
-          performance.push({
-            'Name': message[0],
-            'Arguments': [].slice.call(message, 1) || '',
-            'Element': element,
-            'Execution Time': executionTime
-          });
-        }
-        clearTimeout(module.performance.timer);
-        module.performance.timer = setTimeout(module.performance.display, 100);
-      },
-      display: function () {
-        var
-          title = settings.name + ':',
-          totalTime = 0;
-        time = false;
-        clearTimeout(module.performance.timer);
-        for (var index = 0; index < performance.length; index++) {
-          (function (index, data) {
-            totalTime += data['Execution Time'];
-          })(index, performance[index]);
-        }
-
-        title += ' ' + totalTime + 'ms';
-        if (moduleSelector) {
-          title += ' \'' + moduleSelector + '\'';
-        }
-        if ((console.group !== undefined || console.table !== undefined) && performance.length > 0) {
-          console.groupCollapsed(title);
-          if (console.table) {
-            console.table(performance);
-          } else {
-            for (var indexJ = 0; indexJ < performance.length; indexJ++) {
-              (function (index, data) {
-                console.log(data['Name'] + ': ' + data['Execution Time'] + 'ms');
-              })(indexJ, performance[indexJ]);
-            }
-          }
-          console.groupEnd();
-        }
-        performance = [];
-      }
-    }
-    module.prototype.invoke = function (query, passedArguments, context) {
-      var
-        object = instance,
-        maxDepth,
-        found,
-        response,
-        index;
-      passedArguments = passedArguments || queryArguments;
-      context = element || context;
-      if (typeof query == 'string' && object !== undefined) {
-        query = query.split(/[\. ]/);
-        maxDepth = query.length - 1;
-        for (index = 0; index < query.length; index++) {
-          (function (depth, value) {
-            var camelCaseValue = (depth != maxDepth) ? value + query[depth + 1].charAt(0).toUpperCase() + query[depth + 1].slice(1) : query;
-            if (atFormCheckboxUtil.isPlainObject(object[camelCaseValue]) && (depth != maxDepth)) {
-              object = object[camelCaseValue];
-            } else if (object[camelCaseValue] !== undefined) {
-              found = object[camelCaseValue];
-              return false;
-            } else if (atFormCheckboxUtil.isPlainObject(object[value]) && (depth != maxDepth)) {
-              object = object[value];
-            } else if (object[value] !== undefined) {
-              found = object[value];
-              return false;
-            } else {
-              module.error(error.method, query);
-              return false;
-            }
-          })(index, query[index]);
-        }
-      }
-      if (atFormCheckboxUtil.isFunction(found)) {
-        response = found.apply(context, passedArguments);
-      } else if (found !== undefined) {
-        response = found;
-      }
-      if (atFormCheckboxUtil.isArray(returnedValue)) {
-        returnedValue.push(response);
-      } else if (returnedValue !== undefined) {
-        returnedValue = [returnedValue, response];
-      } else if (response !== undefined) {
-        returnedValue = response;
-      }
-      return found;
-    }
-
     // default settings for semantic checkbox
     window.atFormCheckbox.settings = {
       name: 'Checkbox',
       namespace: 'checkbox',
-
-      debug: false,
-      verbose: true,
-      performance: true,
 
       // delegated event context
       uncheckable: 'auto',
@@ -573,10 +325,6 @@
         readOnly: 'read-only'
       },
 
-      error: {
-        method: 'The method you called is not defined'
-      },
-
       selector: {
         input: 'input[type="checkbox"], input[type="radio"]',
         label: 'label'
@@ -584,5 +332,5 @@
 
     };
 
-  })(window, document, window.atFormData, undefined);
+  })(window, document, undefined);
 </script>
