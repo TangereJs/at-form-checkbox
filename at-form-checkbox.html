@@ -28,7 +28,9 @@
       },
       disabled: {
         type: Boolean,
-        value: false
+        value: false,
+        reflect: true,
+        observer: 'disabledChanged'
       },
       toggle: {
         type: Boolean,
@@ -57,6 +59,17 @@
         }
       }
       this.fire('change', this.value);
+    },
+    disabledChanged: function (newValue, oldValue) {
+      if (this.disabled) {
+        if (this._moduleInstance !== undefined) {
+          this._moduleInstance.disable();
+        }
+      } else {
+        if (this._moduleInstance !== undefined) {
+          this._moduleInstance.enable();
+        }
+      }
     },
     ready: function () {
       if (this.toggle) {
