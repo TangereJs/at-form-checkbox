@@ -87,6 +87,11 @@
           _self.value = "false";
         }
       };
+
+      if (this.value === "true") {
+        this.$.input.setAttribute('checked', 'true');
+      }
+
       this._moduleInstance = new atFormCheckbox(this, settings);
 
       // set disabled if element is disabled
@@ -94,7 +99,7 @@
         this._moduleInstance.disable();
       }
 
-      this.valueChanged('', '');
+      this.valueChanged(this.value, this.value);
     }
   });
 
@@ -104,16 +109,15 @@
     var module = window.atFormCheckbox = function (polymerElement, userSettings) {
       var settings = this.settings = atFormCheckboxUtil.extend(true, {}, atFormCheckbox.settings, userSettings);
 
-      var
-        className = this.className = settings.className,
-        namespace = settings.namespace,
-        selector = settings.selector,
+      var className = this.className = settings.className;
+      var namespace = settings.namespace;
+      var selector = settings.selector;
 
-        eventNamespace = '.' + namespace,
-        moduleNamespace = 'module-' + namespace,
+      var eventNamespace = '.' + namespace;
+      var moduleNamespace = 'module-' + namespace;
 
-        observer = this.observer,
-        element = this.element = polymerElement.$.uiCheckbox;
+      var observer = this.observer;
+      var element = this.element = polymerElement.$.uiCheckbox;
 
       var $module = this.$module = polymerElement.$.uiCheckbox;
       this.$label = $module.querySelector(selector.label);
@@ -128,22 +132,17 @@
     module.prototype.initialize = function () {
       this.initObjects();
 
-      // in this function this is the same as module
-      // we do not need to create a label becase we always have label
-      //          module.create.label();
       this.add.events();
 
       if (this.is.checked()) {
         this.set.checked();
-        if (settings.fireOnInit) {
-          settings.onChecked.call($input);
-          //              settings.onChecked.call($input.get());
+        if (this.settings.fireOnInit) {
+          this.settings.onChecked.call(this.$input);
         }
       } else {
         this.remove.checked();
         if (this.settings.fireOnInit) {
           this.settings.onUnchecked.call(this.$input);
-          //              settings.onUnchecked.call($input.get());
         }
       }
       this.observeChanges();
@@ -156,11 +155,8 @@
     module.prototype.refresh = function () {
       // this here is module instance; we need this to be the html element
       $module = element;
-      //          $module = $(this);
       $label = element.querySelector(selector.label);
-      //          $label = $(this).find(selector.label).first();
       $input = element.querySelector(selector.input);
-      //          $input = $(this).find(selector.input);
     }
 
     module.prototype.observeChanges = function () {
@@ -273,8 +269,8 @@
 
     module.prototype.enable = function () {
       $module.classList.remove(className.disabled);
-      $input.prop('disabled', false);
-      settings.onEnabled.call($input.get());
+      $input.removeAttribute('disabled');
+      settings.onEnabled.call($input);
     }
 
     module.prototype.disable = function () {
