@@ -2,10 +2,8 @@
   "name": "paper-checkbox",
   "private": true,
   "dependencies": {
-    "font-roboto": "Polymer/font-roboto#master",
-    "paper-radio-button": "Polymer/paper-radio-button#master"
-  },
-  "ignore": [
-    "externs/**"
-  ]
+    "polymer": "Polymer/polymer#0.8-preview",
+    "font-roboto": "Polymer/font-roboto#0.8-preview",
+    "at-core-theme": "TangereJs/at-core-theme#0.8-preview"
+  }
 }
