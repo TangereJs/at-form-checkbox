@@ -28,8 +28,8 @@
       disabled: {
         type: Boolean,
         value: false,
-        reflect: true,
-        observer: 'disabledChanged'
+        reflectToAttribute: true,
+        notify: true
       },
       toggle: {
         type: Boolean,
@@ -40,24 +40,23 @@
         value: false
       },
       value: {
-        type: String,
-        value: "false",
-        reflect: true,
-        observer: 'valueChanged'
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true,
+        notify: true
       }
     },
     _moduleInstance: undefined,
     valueChanged: function (newValue, oldValue) {
-      if (this.value === "true") {
+      if (this.value) {
         if (this._moduleInstance !== undefined) {
           this._moduleInstance.check();
         }
-      } else if (this.value === "false") {
+      } else if (!this.value) {
         if (this._moduleInstance !== undefined) {
           this._moduleInstance.uncheck();
         }
       }
-      this.fire('change', this.value);
     },
     disabledChanged: function (newValue, oldValue) {
       if (this.disabled) {
@@ -80,14 +79,14 @@
       var _self = this;
       var settings = {
         onChecked: function () {
-          _self.value = "true";
+          _self.value = true;
         },
         onUnchecked: function () {
-          _self.value = "false";
+          _self.value = false;
         }
       };
 
-      if (this.value === "true") {
+      if (this.value) {
         this.$.input.setAttribute('checked', 'true');
       }
 

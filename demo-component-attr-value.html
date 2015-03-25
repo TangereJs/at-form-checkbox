@@ -1,0 +1,27 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../at-core-theme/at-core-theme.html" />
+<link rel="import" href="at-form-checkbox.html" />
+
+<dom-module id="demo-component-attr-value">
+  <template>
+    <section>
+
+      <h3>Atrribute value tests</h3>
+
+      <div center horizontal layout>
+        <at-form-checkbox flex label="Checked Test" id="checkedCheckbox" value toggle></at-form-checkbox>
+      </div>
+
+      <div center horizontal layout>
+        <at-form-checkbox flex label="Unchecked Test" id="uncheckedCheckbox" slider></at-form-checkbox>
+      </div>
+
+    </section>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'demo-component-attr-value'
+  });
+</script>

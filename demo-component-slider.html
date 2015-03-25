@@ -1,0 +1,48 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../at-core-theme/at-core-theme.html" />
+<link rel="import" href="at-form-checkbox.html" />
+
+<dom-module id="demo-component-slider">
+  <style>
+    .hidden {
+      display: none;
+    }
+  </style>
+  <template>
+    <div vertical layout>
+      <h4>Clear search history</h4>
+      <!-- in at-form-checkbox notify=true for value; {{ }} curly braces specify two way binding -->
+      <!-- valueEcho will be updated when at-form-checkbox.value has changed -->
+      <at-form-checkbox value={{valueEcho}} slider label="Remove all the searches you have ever performed"></at-form-checkbox>
+      <div>
+        All searches you have ever performed <span id="will" class="hidden">will</span> <span id="willnot" class="hidden">won't</span> be removed.
+      </div>
+    </div>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'demo-component-slider',
+    properties: {
+      valueEcho: {
+        type: Boolean,
+        value: false,
+        // notify: true doesn't trigger observer method by convention; that is why observer is specified here
+        observer: 'valueEchoChanged'
+      }
+    },
+    _isReady: false,
+    ready: function () {
+      this.toggleClass('hidden', !this.valueEcho, this.$.will);
+      this.toggleClass('hidden', this.valueEcho, this.$.willnot);
+      this._isReady = true;
+    },
+    valueEchoChanged: function (newValue, oldValue) {
+      if (this._isReady) {
+        this.toggleClass('hidden', !this.valueEcho, this.$.will);
+        this.toggleClass('hidden', this.valueEcho, this.$.willnot);
+      }
+    }
+  });
+</script>

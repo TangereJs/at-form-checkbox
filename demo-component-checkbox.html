@@ -1,0 +1,48 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../at-core-theme/at-core-theme.html" />
+<link rel="import" href="at-form-checkbox.html" />
+
+<dom-module id="demo-component-checkbox">
+  <style>
+    .hidden {
+      display: none;
+    }
+  </style>
+  <template>
+    <div vertical layout>
+      <h4>Notifications</h4>
+      <!-- in at-form-checkbox notify=true for value; {{ }} curly braces specify two way binding -->
+      <!-- valueEcho will be updated when at-form-checkbox.value has changed -->
+      <at-form-checkbox value={{valueEcho}} label="Notify me about updates to apps or games that I've downloaded"></at-form-checkbox>
+      <div>
+        You <span id="will" class="hidden">will</span> <span id="willnot" class="hidden">won't</span> be notified about updates to apps or games that you have downloaded
+      </div>
+    </div>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'demo-component-checkbox',
+    properties: {
+      valueEcho: {
+        type: Boolean,
+        value: true,
+        // notify: true doesn't trigger observer method by convention; that is why observer is specified here
+        observer: 'valueEchoChanged'
+      }
+    },
+    _isReady: false,
+    ready: function () {
+      this.toggleClass('hidden', !this.valueEcho, this.$.will);
+      this.toggleClass('hidden', this.valueEcho, this.$.willnot);
+      this._isReady = true;
+    },
+    valueEchoChanged: function (newValue, oldValue) {
+      if (this._isReady) {
+        this.toggleClass('hidden', !this.valueEcho, this.$.will);
+        this.toggleClass('hidden', this.valueEcho, this.$.willnot);
+      }
+    }
+  });
+</script>

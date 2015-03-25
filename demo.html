@@ -11,113 +11,39 @@
   <script src="../webcomponentsjs/webcomponents.js"></script>
   <link rel="import" href="../polymer/polymer.html" />
 
-  <link rel="import" href="at-form-checkbox.html">
+  <link rel="import" href="at-form-checkbox.html" />
+  <link rel="import" href="demo-component-checkbox.html" />
+  <link rel="import" href="demo-component-toggle.html" />
+  <link rel="import" href="demo-component-slider.html" />
+  <link rel="import" href="demo-component-sound-section.html" />
+  <link rel="import" href="demo-component-attr-value.html" />
+  <link rel="import" href="demo-component-disabled.html" />
+
 </head>
 
 <body>
-
   <div horizontal layout>
-    <div vertical layout>
-      <h4>Notifications</h4>
-      <at-form-checkbox label="Notify me about updates to apps or games that I've downloaded"></at-form-checkbox>
-    </div>
+    <demo-component-checkbox></demo-component-checkbox>
   </div>
 
   <br>
 
   <div horizontal layout>
-    <div vertical layout>
-      <h4>Auto-updates</h4>
-      <at-form-checkbox checked label="Auto-update apps over wifi only" toggle></at-form-checkbox>
-    </div>
+    <demo-component-toggle></demo-component-toggle>
   </div>
 
   <br>
 
   <div horizontal layout>
-    <div vertical layout>
-      <h4>Clear search history</h4>
-      <at-form-checkbox label="Remove all the searches you have ever performed" slider></at-form-checkbox>
-    </div>
+    <demo-component-slider></demo-component-slider>
   </div>
 
-  <div horizontal layout>
-    <div vertical layout>
-      <h4>Value echo</h4>
-      <at-form-checkbox id="observed" label="Change value to see" slider></at-form-checkbox>
-    </div>
-    <div vertical layout>
-      <p>Value echo: <span id="value"></span>
-      </p>
-    </div>
-  </div>
-
-  <script>
-    document.addEventListener('WebComponentsReady', function () {
-      var observed = document.getElementById('observed');
-      var valueSpan = document.getElementById('value');
-
-      valueSpan.innerHTML = observed.value;
-
-      observed.addEventListener('change', function (event) {
-        valueSpan.innerHTML = observed.value;
-      });
-    });
-  </script>
-
-  <br>
   <br>
   <br>
 
-  <section>
-
-    <h3>Sound</h3>
-
-    <div center horizontal layout>
-      <at-form-checkbox flex value="true" label="Touch sound"></at-form-checkbox>
-    </div>
-
-    <div center horizontal layout>
-      <at-form-checkbox flex label="Screen lock sound" toggle></at-form-checkbox>
-    </div>
-
-    <div center horizontal layout>
-      <div flex></div>
-      <at-form-checkbox flex label="Vibrate on touch" slider></at-form-checkbox>
-    </div>
-
-  </section>
-
-
-  <section>
-
-    <h3>Atrribute value tests</h3>
-
-    <div center horizontal layout>
-      <at-form-checkbox flex label="Checked Test" id="checkedCheckbox" value="true" toggle></at-form-checkbox>
-    </div>
-
-    <div center horizontal layout>
-      <at-form-checkbox flex label="Unchecked Test" id="uncheckedCheckbox" value="false" slider></at-form-checkbox>
-    </div>
-
-  </section>
-
-  <section>
-
-    <h3>Atrribute disabled tests</h3>
-
-    <div center horizontal layout>
-      <at-form-checkbox flex label="Checked Test" id="checkedCheckbox" value="true" disabled toggle></at-form-checkbox>
-    </div>
-
-    <div center horizontal layout>
-      <at-form-checkbox flex label="Unchecked Test" id="uncheckedCheckbox" value="false" disabled slider></at-form-checkbox>
-    </div>
-
-  </section>
-
-
+  <demo-component-sound-section></demo-component-sound-section>
+  <demo-component-attr-value></demo-component-attr-value>
+  <demo-component-disabled></demo-component-disabled>
 </body>
 
 </html>

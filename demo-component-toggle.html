@@ -1,0 +1,48 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../at-core-theme/at-core-theme.html" />
+<link rel="import" href="at-form-checkbox.html" />
+
+<dom-module id="demo-component-toggle">
+  <style>
+    .hidden {
+      display: none;
+    }
+  </style>
+  <template>
+    <div vertical layout>
+      <h4>Auto-updates</h4>
+      <!-- in at-form-checkbox notify=true for value; {{ }} curly braces specify two way binding -->
+      <!-- valueEcho will be updated when at-form-checkbox.value has changed -->
+      <at-form-checkbox value={{valueEcho}} toggle label="Auto-update apps over wifi only"></at-form-checkbox>
+      <div>
+        Auto-update apps over wifi only is <span id="on" class="hidden">on</span> <span id="off" class="hidden">off</span>
+      </div>
+    </div>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'demo-component-toggle',
+    properties: {
+      valueEcho: {
+        type: Boolean,
+        value: false,
+        // notify: true doesn't trigger observer method by convention; that is why observer is specified here
+        observer: 'valueEchoChanged'
+      }
+    },
+    _isReady: false,
+    ready: function () {
+      this.toggleClass('hidden', !this.valueEcho, this.$.on);
+      this.toggleClass('hidden', this.valueEcho, this.$.off);
+      this._isReady = true;
+    },
+    valueEchoChanged: function (newValue, oldValue) {
+      if (this._isReady) {
+        this.toggleClass('hidden', !this.valueEcho, this.$.on);
+        this.toggleClass('hidden', this.valueEcho, this.$.off);
+      }
+    }
+  });
+</script>
