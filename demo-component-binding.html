@@ -1,0 +1,27 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../at-core-theme/at-core-theme.html" />
+<link rel="import" href="at-form-checkbox.html" />
+
+<dom-module id="demo-component-binding">
+  <template>
+    <div vertical layout>
+      <h4>Auto-updates (Binding)</h4>
+      <at-form-checkbox value={{valueEcho}} toggle label="Auto-update apps over wifi only"></at-form-checkbox>
+      <div>
+        Auto-update apps over wifi is <span >{{valueEcho}}</span>
+      </div>
+    </div>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'demo-component-binding',
+    properties: {
+      valueEcho: {
+        type: Boolean,
+        value: false
+      }
+    }
+  });
+</script>
