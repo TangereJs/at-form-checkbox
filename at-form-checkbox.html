@@ -29,7 +29,8 @@
         type: Boolean,
         value: false,
         reflectToAttribute: true,
-        notify: true
+        notify: true,
+        observer: 'disabledChanged'
       },
       toggle: {
         type: Boolean,
@@ -42,8 +43,8 @@
       value: {
         type: Boolean,
         value: false,
-        reflectToAttribute: true,
-        notify: true
+        notify: true,
+        observer: 'valueChanged'
       }
     },
     _moduleInstance: undefined,
