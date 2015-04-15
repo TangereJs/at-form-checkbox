@@ -43,7 +43,7 @@
         observer: 'sliderChanged'
       },
       value: {
-        type: Boolean,
+        type: Object,
         value: false,
         notify: true,
         observer: 'valueChanged'
@@ -94,6 +94,10 @@
           _self.value = false;
         }
       };
+
+      // convert string values to bool
+      if (this.value === "true") this.value = true;
+      if (this.value === "false") this.value = false;
 
       if (this.value) {
         this.$.input.setAttribute('checked', 'true');
@@ -179,100 +183,100 @@
     }
 
     module.prototype.initObjects = function () {
-        var _self = this;
+      var _self = this;
 
-        this.event = {
-          keydown: function (event) {
-            var
-              key = event.which,
-              keyCode = {
-                enter: 13,
-                space: 32,
-                escape: 27
-              };
-            if (key == keyCode.escape) {
-              var blurEvent = document.createEvent('HTMLEvents');
-              blurEvent.initEvent('blur', false, false);
-              _self.$module.dispatchEvent(blurEvent);
-            }
-            if (!event.ctrlKey && (key == keyCode.enter || key == keyCode.space)) {
-              _self.toggle.call(this);
-              event.preventDefault();
-            }
+      this.event = {
+        keydown: function (event) {
+          var
+            key = event.which,
+            keyCode = {
+              enter: 13,
+              space: 32,
+              escape: 27
+            };
+          if (key == keyCode.escape) {
+            var blurEvent = document.createEvent('HTMLEvents');
+            blurEvent.initEvent('blur', false, false);
+            _self.$module.dispatchEvent(blurEvent);
+          }
+          if (!event.ctrlKey && (key == keyCode.enter || key == keyCode.space)) {
+            _self.toggle.call(this);
+            event.preventDefault();
           }
         }
+      }
 
-        this.is = {
-          radio: function () {
-            return _self.$module.classList.contains(_self.className.radio);
-          },
-          checked: function () {
-            var checkedAttr = _self.$input.getAttribute('checked');
-            return (checkedAttr !== null || checkedAttr !== '') && checkedAttr;
-          },
-          unchecked: function () {
-            return !_self.is.checked();
+      this.is = {
+        radio: function () {
+          return _self.$module.classList.contains(_self.className.radio);
+        },
+        checked: function () {
+          var checkedAttr = _self.$input.getAttribute('checked');
+          return (checkedAttr !== null || checkedAttr !== '') && checkedAttr;
+        },
+        unchecked: function () {
+          return !_self.is.checked();
+        }
+      }
+
+      this.can = {
+        change: function () {
+          var hasDisabled = _self.$module.classList.contains(_self.className.disabled);
+          var hasReadonly = _self.$module.classList.contains(_self.className.readOnly);
+          var hasPropDisabled = _self.$input.getAttribute('disabled');
+          return !(hasDisabled || hasReadonly || hasPropDisabled);
+        },
+        uncheck: function () {
+          return (typeof _self.settings.uncheckable === 'boolean') ? _self.settings.uncheckable : !_self.is.radio();
+        }
+      }
+
+      this.set = {
+        checked: function () {
+          _self.$module.classList.add(_self.className.checked);
+        },
+        tab: function () {
+          if (_self.$input.getAttribute('tabindex') === undefined) {
+            _self.$input.setAttribute('tabindex', 0);
           }
         }
+      }
 
-        this.can = {
-          change: function () {
-            var hasDisabled = _self.$module.classList.contains(_self.className.disabled);
-            var hasReadonly = _self.$module.classList.contains(_self.className.readOnly);
-            var hasPropDisabled = _self.$input.getAttribute('disabled');
-            return !(hasDisabled || hasReadonly || hasPropDisabled);
-          },
-          uncheck: function () {
-            return (typeof _self.settings.uncheckable === 'boolean') ? _self.settings.uncheckable : !_self.is.radio();
-          }
+      this.has = {
+        label: function () {
+          return (_self.$label.length > 0);
         }
+      }
 
-        this.set = {
-          checked: function () {
-            _self.$module.classList.add(_self.className.checked);
-          },
-          tab: function () {
-            if (_self.$input.getAttribute('tabindex') === undefined) {
-              _self.$input.setAttribute('tabindex', 0);
-            }
-          }
+      this.add = {
+        events: function () {
+          _self.$module.addEventListener('click', _self.toggle);
+          _self.$input.addEventListener('keydown', _self.event.keydown);
         }
+      }
 
-        this.has = {
-          label: function () {
-            return (_self.$label.length > 0);
-          }
+      this.remove = {
+        checked: function () {
+          _self.$module.classList.remove(_self.className.checked);
+        },
+        events: function () {
+          _self.$module.removeEventListener('click', _self.toggle);
+          _self.$input.removeEventListener('keydown', _self.event.keydown);
         }
+      }
 
-        this.add = {
-          events: function () {
-            _self.$module.addEventListener('click', _self.toggle);
-            _self.$input.addEventListener('keydown', _self.event.keydown);
-          }
+      this.toggle = function (event) {
+        if (!_self.can.change()) {
+          return;
         }
-
-        this.remove = {
-          checked: function () {
-            _self.$module.classList.remove(_self.className.checked);
-          },
-          events: function () {
-            _self.$module.removeEventListener('click', _self.toggle);
-            _self.$input.removeEventListener('keydown', _self.event.keydown);
-          }
+        if (_self.is.unchecked()) {
+          _self.check();
+        } else if (_self.is.checked() && _self.can.uncheck()) {
+          _self.uncheck();
         }
+      }
 
-        this.toggle = function (event) {
-          if (!_self.can.change()) {
-            return;
-          }
-          if (_self.is.unchecked()) {
-            _self.check();
-          } else if (_self.is.checked() && _self.can.uncheck()) {
-            _self.uncheck();
-          }
-        }
-
-      } // end of initObjects
+    } // end of initObjects
 
     module.prototype.enable = function () {
       $module.classList.remove(className.disabled);
