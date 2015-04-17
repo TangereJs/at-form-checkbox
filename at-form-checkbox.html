@@ -195,7 +195,7 @@
               escape: 27
             };
           if (key == keyCode.escape) {
-            var blurEvent = document.createEvent('HTMLEvents');
+            var blurEvent = document.createEvent('Event');
             blurEvent.initEvent('blur', false, false);
             _self.$module.dispatchEvent(blurEvent);
           }
@@ -293,13 +293,13 @@
     module.prototype.check = function () {
       this.$input.setAttribute('checked', 'true');
 
-      var changeEvent = document.createEvent('HtmlEvents');
+      var changeEvent = document.createEvent('Event');
       changeEvent.initEvent('change', false, false);
       this.$input.dispatchEvent(changeEvent);
 
       this.set.checked();
 
-      var blurEvent = document.createEvent('HtmlEvents');
+      var blurEvent = document.createEvent('Event');
       blurEvent.initEvent('blur', false, false);
       this.$input.dispatchEvent(blurEvent);
 
@@ -310,12 +310,12 @@
     module.prototype.uncheck = function () {
       this.$input.removeAttribute('checked');
 
-      var changeEvent = document.createEvent('HtmlEvents');
+      var changeEvent = document.createEvent('Event');
       changeEvent.initEvent('change', false, false);
       this.$input.dispatchEvent(changeEvent);
 
       this.remove.checked();
-      var blurEvent = document.createEvent('HtmlEvents');
+      var blurEvent = document.createEvent('Event');
       blurEvent.initEvent('blur', false, false);
       this.$input.dispatchEvent(blurEvent);
 
