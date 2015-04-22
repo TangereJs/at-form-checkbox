@@ -279,9 +279,9 @@
     } // end of initObjects
 
     module.prototype.enable = function () {
-      $module.classList.remove(className.disabled);
-      $input.removeAttribute('disabled');
-      settings.onEnabled.call($input);
+      this.$module.classList.remove(this.className.disabled);
+      this.$input.removeAttribute('disabled');
+      this.settings.onEnabled.call(this.$input);
     }
 
     module.prototype.disable = function () {
