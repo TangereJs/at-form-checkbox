@@ -194,7 +194,7 @@
               escape: 27
             };
           if (key == keyCode.escape) {
-            var blurEvent = document.createEvent('Event');
+            var blurEvent = document.createEvent('HTMLEvents');
             blurEvent.initEvent('blur', false, false);
             _self.$module.dispatchEvent(blurEvent);
           }
@@ -282,23 +282,23 @@
       this.$input.removeAttribute('disabled');
       this.settings.onEnabled.call(this.$input);
     }
-
+    
     module.prototype.disable = function () {
       this.$module.classList.add(this.className.disabled);
-      this.$input.setAttribute('disabled', 'true');
+      this.$input.setAttribute('disabled', true);
       this.settings.onDisabled.call(this.$input);
     }
 
     module.prototype.check = function () {
       this.$input.setAttribute('checked', 'true');
 
-      var changeEvent = document.createEvent('Event');
+      var changeEvent = document.createEvent('HTMLEvents');
       changeEvent.initEvent('change', false, false);
       this.$input.dispatchEvent(changeEvent);
 
       this.set.checked();
 
-      var blurEvent = document.createEvent('Event');
+      var blurEvent = document.createEvent('HTMLEvents');
       blurEvent.initEvent('blur', false, false);
       this.$input.dispatchEvent(blurEvent);
 
@@ -309,12 +309,12 @@
     module.prototype.uncheck = function () {
       this.$input.removeAttribute('checked');
 
-      var changeEvent = document.createEvent('Event');
+      var changeEvent = document.createEvent('HTMLEvents');
       changeEvent.initEvent('change', false, false);
       this.$input.dispatchEvent(changeEvent);
 
       this.remove.checked();
-      var blurEvent = document.createEvent('Event');
+      var blurEvent = document.createEvent('HTMLEvents');
       blurEvent.initEvent('blur', false, false);
       this.$input.dispatchEvent(blurEvent);
 
