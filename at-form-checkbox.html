@@ -49,6 +49,7 @@
       }
     },
     _moduleInstance: undefined,
+    _scopeCssViaAttr: true,
     valueChanged: function (newValue, oldValue) {
       if (this.value) {
         if (this._moduleInstance !== undefined) {
@@ -95,8 +96,12 @@
       };
 
       // convert string values to bool
-      if (this.value === "true") this.value = true;
-      if (this.value === "false") this.value = false;
+      if (this.value === "true") {
+        this.value = true;
+      }
+      if (this.value === "false") {
+        this.value = false;
+      }
 
       if (this.value) {
         this.$.input.setAttribute('checked', 'true');
@@ -137,7 +142,7 @@
 
       // end of the function
       return this;
-    }
+    };
 
     module.prototype.initialize = function () {
       this.initObjects();
@@ -156,18 +161,18 @@
         }
       }
       this.observeChanges();
-    }
+    };
 
     module.prototype.destroy = function () {
       this.remove.events();
-    }
+    };
 
     module.prototype.refresh = function () {
       // this here is module instance; we need this to be the html element
       $module = element;
       $label = element.querySelector(selector.label);
       $input = element.querySelector(selector.input);
-    }
+    };
 
     module.prototype.observeChanges = function () {
       if ('MutationObserver' in window) {
@@ -179,7 +184,7 @@
           subtree: true
         });
       }
-    }
+    };
 
     module.prototype.initObjects = function () {
       var _self = this;
@@ -192,11 +197,16 @@
               enter: 13,
               space: 32,
               escape: 27
-            };
+            },
+            ex;
           if (key == keyCode.escape) {
-            var blurEvent = document.createEvent('HTMLEvents');
-            blurEvent.initEvent('blur', false, false);
-            _self.$module.dispatchEvent(blurEvent);
+            // using try catch here because there is bug in firefox:
+            // see here: https://bugzilla.mozilla.org/show_bug.cgi?id=867418
+            try {
+              var blurEvent = document.createEvent('HTMLEvents');
+              blurEvent.initEvent('blur', false, false);
+              _self.$module.dispatchEvent(blurEvent);
+            } catch (ex) {}
           }
           if (!event.ctrlKey && (key == keyCode.enter || key == keyCode.space)) {
             _self.toggle.call(this);
@@ -275,48 +285,67 @@
         }
       }
 
-    } // end of initObjects
+    }; // end of initObjects
 
     module.prototype.enable = function () {
       this.$module.classList.remove(this.className.disabled);
       this.$input.removeAttribute('disabled');
       this.settings.onEnabled.call(this.$input);
-    }
-    
+    };
+
     module.prototype.disable = function () {
       this.$module.classList.add(this.className.disabled);
       this.$input.setAttribute('disabled', true);
       this.settings.onDisabled.call(this.$input);
-    }
+    };
 
     module.prototype.check = function () {
+      var ex;
       this.$input.setAttribute('checked', 'true');
 
-      var changeEvent = document.createEvent('HTMLEvents');
-      changeEvent.initEvent('change', false, false);
-      this.$input.dispatchEvent(changeEvent);
+      // using try catch here because there is bug in firefox:
+      // see here: https://bugzilla.mozilla.org/show_bug.cgi?id=867418
+      try {
+        var changeEvent = document.createEvent('HTMLEvents');
+        changeEvent.initEvent('change', false, false);
+        this.$input.dispatchEvent(changeEvent);
+      } catch (ex) {}
 
       this.set.checked();
 
-      var blurEvent = document.createEvent('HTMLEvents');
-      blurEvent.initEvent('blur', false, false);
-      this.$input.dispatchEvent(blurEvent);
+      // using try catch here because there is bug in firefox:
+      // see here: https://bugzilla.mozilla.org/show_bug.cgi?id=867418
+      try {
+        var blurEvent = document.createEvent('HTMLEvents');
+        blurEvent.initEvent('blur', false, false);
+        this.$input.dispatchEvent(blurEvent);
+      } catch (ex) {}
 
       this.settings.onChange.call(this.$input);
       this.settings.onChecked.call(this.$input);
-    }
+    };
 
     module.prototype.uncheck = function () {
+      var ex;
       this.$input.removeAttribute('checked');
 
-      var changeEvent = document.createEvent('HTMLEvents');
-      changeEvent.initEvent('change', false, false);
-      this.$input.dispatchEvent(changeEvent);
+      // using try catch here because there is bug in firefox:
+      // see here: https://bugzilla.mozilla.org/show_bug.cgi?id=867418
+      try {
+        var changeEvent = document.createEvent('HTMLEvents');
+        changeEvent.initEvent('change', false, false);
+        this.$input.dispatchEvent(changeEvent);
+      } catch (ex) {}
 
       this.remove.checked();
-      var blurEvent = document.createEvent('HTMLEvents');
-      blurEvent.initEvent('blur', false, false);
-      this.$input.dispatchEvent(blurEvent);
+      
+      // using try catch here because there is bug in firefox:
+      // see here: https://bugzilla.mozilla.org/show_bug.cgi?id=867418
+      try {
+        var blurEvent = document.createEvent('HTMLEvents');
+        blurEvent.initEvent('blur', false, false);
+        this.$input.dispatchEvent(blurEvent);
+      } catch (ex) {}
 
       this.settings.onChange.call(this.$input);
       this.settings.onUnchecked.call(this.$input);
