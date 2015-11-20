@@ -48,13 +48,14 @@
         observer: 'valueChanged'
       }
     },
-    $meta: {
+    $meta: [{
       title: "Checkbox",
-      form: {
-        type: "boolean",
-        xtype: [undefined, "toggle"]
-      }
-    },
+      type: "boolean"
+    }, {
+      title: "Toggle",
+      type: "boolean",
+      xtype: "toggle"
+    }],
     _moduleInstance: undefined,
     _scopeCssViaAttr: true,
     valueChanged: function(newValue, oldValue) {
