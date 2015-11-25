@@ -27,19 +27,24 @@
       disabled: {
         type: Boolean,
         value: false,
-        reflectToAttribute: true,
         notify: true,
         observer: 'disabledChanged'
       },
-      toggle: {
-        type: Boolean,
-        value: false,
-        observer: 'toggleChanged'
-      },
-      slider: {
-        type: Boolean,
-        value: false,
-        observer: 'sliderChanged'
+      xtype: {
+        type: String,
+        value: '',
+        observer: 'xtypeChanged',
+        xtype: 'enum',
+        xvaluelist: [{
+          title: "Checkbox",
+          value: ""
+        }, {
+          title: "Toggle",
+          value: "toggle"
+        }, {
+          title: "Slider",
+          value: "slider"
+        }]
       },
       value: {
         type: Boolean,
@@ -47,6 +52,18 @@
         notify: true,
         observer: 'valueChanged'
       }
+    },
+    get toggle() {
+      return this.xtype === 'toggle';
+    },
+    set toggle(newValue) {
+      this.xtype = 'toggle';
+    },
+    get slider() {
+      return this.xtype === 'slider';
+    },
+    set slider(newValue) {
+      this.xtype = 'slider';
     },
     $meta: [{
       title: "Checkbox",
@@ -80,11 +97,9 @@
         }
       }
     },
-    toggleChanged: function() {
-      this.toggleClass('toggle', this.toggle, this.$.uiCheckbox);
-    },
-    sliderChanged: function() {
-      this.toggleClass('slider', this.slider, this.$.uiCheckbox);
+    xtypeChanged: function(newValue, oldValue) {
+      this.toggleClass('toggle', newValue === 'toggle', this.$.uiCheckbox);
+      this.toggleClass('slider', newValue === 'slider', this.$.uiCheckbox);
     },
     ready: function() {
       if (this.toggle) {
