@@ -2,6 +2,12 @@
 <link rel="import" href="../at-core-theme/at-core-theme.html" />
 
 <dom-module id="at-form-checkbox">
+  <style media="screen">
+
+    .ui.checkbox.hidden {
+      display: none;
+    }
+  </style>
   <template>
     <at-core-theme></at-core-theme>
     <div id="uiCheckbox" class="ui checkbox">
@@ -51,6 +57,17 @@
         value: false,
         notify: true,
         observer: 'valueChanged'
+      },
+      /**
+       * Hides the element. When hidden nothing is displayed for the element
+       * @property hide
+       * @type Boolean
+       * @default false
+       */
+      hide: {
+        type: Boolean,
+        value: false,
+        observer: 'hideChanged'
       }
     },
     get toggle() {
@@ -75,6 +92,10 @@
     }],
     _moduleInstance: undefined,
     _scopeCssViaAttr: true,
+    hideChanged: function (newValue, oldValue) {
+      var wrapper = this.$.uiCheckbox;
+      this.toggleClass('hidden', newValue, wrapper);
+    },
     valueChanged: function(newValue, oldValue) {
       if (this.value) {
         if (this._moduleInstance !== undefined) {
