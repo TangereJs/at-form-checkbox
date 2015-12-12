@@ -2,17 +2,20 @@
 <link rel="import" href="../at-core-theme/at-core-theme.html" />
 
 <dom-module id="at-form-checkbox">
-  <style media="screen">
-
+  <style>
     .ui.checkbox.hidden {
       display: none;
+    }
+
+    .ui.checkbox > .labelContent {
+      font-weight: bold;
     }
   </style>
   <template>
     <at-core-theme></at-core-theme>
     <div id="uiCheckbox" class="ui checkbox">
       <input id="input" type="checkbox" name="{{name}}">
-      <label id="label">{{label}}</label>
+      <label class="labelContent" id="label">{{label}}</label>
     </div>
   </template>
 </dom-module>
@@ -92,7 +95,7 @@
     }],
     _moduleInstance: undefined,
     _scopeCssViaAttr: true,
-    hideChanged: function (newValue, oldValue) {
+    hideChanged: function(newValue, oldValue) {
       var wrapper = this.$.uiCheckbox;
       this.toggleClass('hidden', newValue, wrapper);
     },
