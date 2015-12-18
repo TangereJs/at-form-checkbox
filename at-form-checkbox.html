@@ -36,7 +36,6 @@
       disabled: {
         type: Boolean,
         value: false,
-        notify: true,
         observer: 'disabledChanged'
       },
       xtype: {
@@ -95,20 +94,42 @@
     }],
     _moduleInstance: undefined,
     _scopeCssViaAttr: true,
+    _isInternalUpdate: false,
     hideChanged: function(newValue, oldValue) {
       var wrapper = this.$.uiCheckbox;
       this.toggleClass('hidden', newValue, wrapper);
     },
     valueChanged: function(newValue, oldValue) {
-      if (this.value) {
+      var tempValue = this._AT3ParseBool(newValue);
+      if (tempValue) {
         if (this._moduleInstance !== undefined) {
+          this._isInternalUpdate = true;
           this._moduleInstance.check();
+          this._isInternalUpdate = false;
         }
-      } else if (!this.value) {
+      } else if (!tempValue) {
         if (this._moduleInstance !== undefined) {
+          this._isInternalUpdate = true;
           this._moduleInstance.uncheck();
+          this._isInternalUpdate = false;
         }
       }
+    },
+    // *ij* see https://adenin.atlassian.net/browse/AT-3 to understand why this function exists and what it does
+    _AT3ParseBool: function (value) {
+      // Boolean(value) covers true, false, 1 and 0 but doesn't work for "0" and "1" or "true" or "false"
+      var result = Boolean(value);
+      if (value === "0" || value === "\"0\"") {
+        result = false;
+      } else if (value === "0" || value === "\"1\"") {
+        result = true;
+      } else if (value === "true" || value === "\"true\"") {
+        result = true;
+      } else if (value === "false" || value === "\"false\"") {
+        result = false;
+      }
+
+      return result;
     },
     disabledChanged: function(newValue, oldValue) {
       if (this.disabled) {
@@ -135,22 +156,20 @@
       var _self = this;
       var settings = {
         onChecked: function() {
-          _self.value = true;
+          if (!_self._isInternalUpdate) {
+            _self.value = true;
+          }
         },
         onUnchecked: function() {
-          _self.value = false;
+          if (!_self._isInternalUpdate) {
+            _self.value = false;
+          }
         }
       };
 
-      // convert string values to bool
-      if (this.value === "true") {
-        this.value = true;
-      }
-      if (this.value === "false") {
-        this.value = false;
-      }
+      var tempValue = this._AT3ParseBool(this.value);
 
-      if (this.value) {
+      if (tempValue) {
         this.$.input.setAttribute('checked', 'true');
       }
 
@@ -161,7 +180,7 @@
         this._moduleInstance.disable();
       }
 
-      this.valueChanged(this.value, this.value);
+      this.valueChanged(tempValue, undefined);
     }
   });
 
