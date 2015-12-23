@@ -1,8 +1,22 @@
 <link rel="import" href="../polymer/polymer.html" />
 <link rel="import" href="../at-core-theme/at-core-theme.html" />
+<link rel="import" href="../at-form-behaviors/at-form-behaviors-validation.html">
 
 <dom-module id="at-form-checkbox">
   <style>
+    --error-color: #e41e2b;
+
+    .hint-container.error > p {
+      color: var(--error-color);
+    }
+
+    .ui.checkbox.error > label {
+      /* *ij* for unknown reasons using css variable for color doesn't work */
+      /* in dev tools an empty entry is displayed for css rule and no color is applied */
+      /*color: var(--error-color); */
+      color: #e41e2b;
+    }
+
     .ui.checkbox.hidden {
       display: none;
     }
@@ -17,6 +31,9 @@
       <input id="input" type="checkbox" name="{{name}}">
       <label class="labelContent" id="label">{{label}}</label>
     </div>
+    <div id="hintContainer" class="hint-container">
+      <p id="errorHtml" class="hint"></p>
+    </div>
   </template>
 </dom-module>
 
@@ -24,6 +41,7 @@
   "use strict";
   Polymer({
     is: "at-form-checkbox",
+    behaviors: [AtFormBehaviors.AtFormBehaviorsValidation],
     properties: {
       name: {
         type: String,
@@ -98,6 +116,9 @@
     hideChanged: function(newValue, oldValue) {
       var wrapper = this.$.uiCheckbox;
       this.toggleClass('hidden', newValue, wrapper);
+      if (this._isReady) {
+        this.validate();
+      }
     },
     valueChanged: function(newValue, oldValue) {
       var tempValue = this._AT3ParseBool(newValue);
@@ -147,6 +168,7 @@
       this.toggleClass('slider', newValue === 'slider', this.$.uiCheckbox);
     },
     ready: function() {
+      this._isReady = false;
       if (this.toggle) {
         this.$.uiCheckbox.classList.add('toggle');
       }
@@ -181,6 +203,13 @@
       }
 
       this.valueChanged(tempValue, undefined);
+      this._isReady = true;
+    },
+    _updateUIValidState: function (isValid) {
+      var hintContainer = this.$.hintContainer;
+      this.toggleClass('error', !isValid, hintContainer);
+      var uiCheckbox = this.$.uiCheckbox;
+      this.toggleClass('error', !isValid, uiCheckbox);
     }
   });
 
