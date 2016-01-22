@@ -4,17 +4,16 @@
 
 <dom-module id="at-form-checkbox">
   <style>
-    --error-color: #e41e2b;
+    :host {
+      --error-color: #e41e2b;
+    }
 
     .hint-container.error > p {
       color: var(--error-color);
     }
 
     .ui.checkbox.error > label {
-      /* *ij* for unknown reasons using css variable for color doesn't work */
-      /* in dev tools an empty entry is displayed for css rule and no color is applied */
-      /*color: var(--error-color); */
-      color: #e41e2b;
+      color: var(--error-color);
     }
 
     .ui.checkbox.hidden {
