@@ -1,15 +1,14 @@
 <link rel="import" href="../polymer/polymer.html" />
-<link rel="import" href="../at-core-theme/at-core-theme.html" />
 <link rel="import" href="at-form-checkbox.html" />
 
 <dom-module id="demo-component-checkbox">
+  <template>
   <style>
     .hidden {
       display: none;
     }
   </style>
-  <template>
-    <div vertical layout>
+    <div>
       <h4>Notifications</h4>
       <!-- in at-form-checkbox notify=true for value; {{ }} curly braces specify two way binding -->
       <!-- valueEcho will be updated when at-form-checkbox.value has changed -->

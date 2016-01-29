@@ -1,37 +1,68 @@
-<link rel="import" href="../polymer/polymer.html" />
-<link rel="import" href="../at-core-theme/at-core-theme.html" />
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../at-theme/at-theme.html">
 <link rel="import" href="../at-form-behaviors/at-form-behaviors-validation.html">
+<link rel="import" href="../paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../paper-toggle-button/paper-toggle-button.html">
 
 <dom-module id="at-form-checkbox">
-  <style>
-    :host {
-      --error-color: #e41e2b;
-    }
-
-    .hint-container.error > p {
-      color: var(--error-color);
-    }
-
-    .ui.checkbox.error > label {
-      color: var(--error-color);
-    }
-
-    .ui.checkbox.hidden {
-      display: none;
-    }
-
-    .ui.checkbox > .labelContent {
-      font-weight: bold;
-    }
-  </style>
   <template>
-    <at-core-theme></at-core-theme>
-    <div id="uiCheckbox" class="ui checkbox">
-      <input id="input" type="checkbox" name="{{name}}">
-      <label class="labelContent" id="label">{{label}}</label>
-    </div>
-    <div id="hintContainer" class="hint-container">
-      <p id="errorHtml" class="hint"></p>
+    <style>
+      .hidden {
+        display: none;
+      }
+
+      .error {
+        color: var(--at-error-color);
+      }
+
+      .disabled {
+        @apply(--at-form-disabled);
+      }
+
+      p {
+        margin: 0;
+      }
+
+      #cbLabel {
+        @apply(--at-form-label);
+      }
+
+      #tgLabel {
+        @apply(--at-form-label);
+      }
+
+      #atContainer {
+        @apply(--at-form-element);
+      }
+
+      #contentContainer.error {
+        @apply(--at-form-error-margins);
+      }
+
+      #errorHtml {
+        @apply(--at-form-error-font);
+      }
+    </style>
+    <div id="atContainer" class="at-container">
+      <div id="contentContainer">
+        <div id="checkboxContainer" class="hidden">
+          <paper-checkbox id="checkbox" name$="{{name}}" disabled$="{{disabled}}">
+            <div id="cbLabelContainer">
+              <label id="cbLabel">{{label}}</label>
+            </div>
+          </paper-checkbox>
+        </div>
+        <div id="toggleContainer" class="hidden">
+          <paper-toggle-button id="toggle" name$="{{name}}" disabled$="{{disabled}}">
+            <div id="tgLabelContainer">
+              <label id="tgLabel">{{label}}</label>
+            </div>
+          </paper-toggle-button>
+        </div>
+      </div>
+      <div id="hintContainer" class="at-hint-container">
+        <p id="errorHtml" class="at-hint"></p>
+      </div>
     </div>
   </template>
 </dom-module>
@@ -66,9 +97,6 @@
         }, {
           title: "Toggle",
           value: "toggle"
-        }, {
-          title: "Slider",
-          value: "slider"
         }]
       },
       value: {
@@ -89,18 +117,6 @@
         observer: 'hideChanged'
       }
     },
-    get toggle() {
-      return this.xtype === 'toggle';
-    },
-    set toggle(newValue) {
-      this.xtype = 'toggle';
-    },
-    get slider() {
-      return this.xtype === 'slider';
-    },
-    set slider(newValue) {
-      this.xtype = 'slider';
-    },
     $meta: [{
       title: "Checkbox",
       type: "boolean"
@@ -109,37 +125,37 @@
       type: "boolean",
       xtype: "toggle"
     }],
-    _moduleInstance: undefined,
     _scopeCssViaAttr: true,
-    _isInternalUpdate: false,
     hideChanged: function(newValue, oldValue) {
-      var wrapper = this.$.uiCheckbox;
-      this.toggleClass('hidden', newValue, wrapper);
+      var atContainer = this.$.atContainer;
+      this.toggleClass('hidden', newValue, atContainer);
       if (this._isReady) {
         this.validate();
       }
     },
     valueChanged: function(newValue, oldValue) {
       var tempValue = this._AT3ParseBool(newValue);
+      var checkbox = this.$.checkbox;
+      var toggle = this.$.toggle;
       if (tempValue) {
-        if (this._moduleInstance !== undefined) {
-          this._isInternalUpdate = true;
-          this._moduleInstance.check();
-          this._isInternalUpdate = false;
-        }
+        checkbox.checked = tempValue;
+        toggle.checked = tempValue;
       } else if (!tempValue) {
-        if (this._moduleInstance !== undefined) {
-          this._isInternalUpdate = true;
-          this._moduleInstance.uncheck();
-          this._isInternalUpdate = false;
-        }
+        checkbox.checked = tempValue;
+        toggle.checked = tempValue;
       }
     },
-    focus: function () {
-      this.$.input.focus();
+    focus: function() {
+      var checkbox = this.$.checkbox;
+      var toggle = this.$.toggle;
+      if (this.xtype === "") {
+        Polymer.dom(checkbox).setAttribute('focused');
+      } else if (this.xtype === "toggle") {
+        Polymer.dom(toggle).setAttribute('focused');
+      }
     },
     // *ij* see https://adenin.atlassian.net/browse/AT-3 to understand why this function exists and what it does
-    _AT3ParseBool: function (value) {
+    _AT3ParseBool: function(value) {
       // Boolean(value) covers true, false, 1 and 0 but doesn't work for "0" and "1" or "true" or "false"
       var result = Boolean(value);
       if (value === "0" || value === "\"0\"") {
@@ -155,454 +171,54 @@
       return result;
     },
     disabledChanged: function(newValue, oldValue) {
-      if (this.disabled) {
-        if (this._moduleInstance !== undefined) {
-          this._moduleInstance.disable();
-        }
-      } else {
-        if (this._moduleInstance !== undefined) {
-          this._moduleInstance.enable();
-        }
-      }
       if (this._isReady) {
         this.validate();
       }
     },
     xtypeChanged: function(newValue, oldValue) {
-      this.toggleClass('toggle', newValue === 'toggle', this.$.uiCheckbox);
-      this.toggleClass('slider', newValue === 'slider', this.$.uiCheckbox);
+      var checkboxContainer = this.$.checkboxContainer;
+      this.toggleClass('hidden', newValue === 'toggle', checkboxContainer);
+      var toggleContainer = this.$.toggleContainer;
+      this.toggleClass('hidden', newValue === '', toggleContainer);
     },
     ready: function() {
+      this._isInternalUpdate = false;
       this._isReady = false;
-      if (this.toggle) {
-        this.$.uiCheckbox.classList.add('toggle');
-      }
-      if (this.slider) {
-        this.$.uiCheckbox.classList.add('slider');
-      }
-      var _self = this;
-      var settings = {
-        onChecked: function() {
-          if (!_self._isInternalUpdate) {
-            _self.value = true;
-          }
-        },
-        onUnchecked: function() {
-          if (!_self._isInternalUpdate) {
-            _self.value = false;
-          }
-        }
-      };
 
-      var tempValue = this._AT3ParseBool(this.value);
+      var self = this;
 
-      if (tempValue) {
-        this.$.input.setAttribute('checked', 'true');
-      }
+      var checkbox = this.$.checkbox;
 
-      this._moduleInstance = new atFormCheckbox(this, settings);
-
-      // set disabled if element is disabled
-      if (this.disabled) {
-        this._moduleInstance.disable();
-      }
-
-      this.valueChanged(tempValue, undefined);
-      this._isReady = true;
-    },
-    _updateUIValidState: function (isValid) {
-      var hintContainer = this.$.hintContainer;
-      this.toggleClass('error', !isValid, hintContainer);
-      var uiCheckbox = this.$.uiCheckbox;
-      this.toggleClass('error', !isValid, uiCheckbox);
-    }
-  });
-
-  (function(window, document, undefined) {
-    "use strict";
-
-    var module = window.atFormCheckbox = function(polymerElement, userSettings) {
-      var settings = this.settings = util.extend(true, {}, atFormCheckbox.settings, userSettings);
-
-      var className = this.className = settings.className;
-      var namespace = settings.namespace;
-      var selector = settings.selector;
-
-      var eventNamespace = '.' + namespace;
-      var moduleNamespace = 'module-' + namespace;
-
-      var observer = this.observer;
-      var element = this.element = polymerElement.$.uiCheckbox;
-
-      var $module = this.$module = polymerElement.$.uiCheckbox;
-      this.$label = $module.querySelector(selector.label);
-      this.$input = $module.querySelector(selector.input);
-
-      this.initialize();
-
-      // end of the function
-      return this;
-    };
-
-    module.prototype.initialize = function() {
-      this.initObjects();
-
-      this.add.events();
-
-      if (this.is.checked()) {
-        this.set.checked();
-        if (this.settings.fireOnInit) {
-          this.settings.onChecked.call(this.$input);
-        }
-      } else {
-        this.remove.checked();
-        if (this.settings.fireOnInit) {
-          this.settings.onUnchecked.call(this.$input);
-        }
-      }
-      this.observeChanges();
-    };
-
-    module.prototype.destroy = function() {
-      this.remove.events();
-    };
-
-    module.prototype.refresh = function() {
-      // this here is module instance; we need this to be the html element
-      $module = element;
-      $label = element.querySelector(selector.label);
-      $input = element.querySelector(selector.input);
-    };
-
-    module.prototype.observeChanges = function() {
-      if ('MutationObserver' in window) {
-        this.observer = new MutationObserver(function(mutations) {
-          this.refresh();
-        });
-        this.observer.observe(this.element, {
-          childList: true,
-          subtree: true
-        });
-      }
-    };
-
-    module.prototype.initObjects = function() {
-      var _self = this;
-
-      this.event = {
-        keydown: function(event) {
-          var
-            key = event.which,
-            keyCode = {
-              enter: 13,
-              space: 32,
-              escape: 27
-            },
-            ex;
-          if (key == keyCode.escape) {
-            // using try catch here because there is bug in firefox:
-            // see here: https://bugzilla.mozilla.org/show_bug.cgi?id=867418
-            try {
-              var blurEvent = document.createEvent('HTMLEvents');
-              blurEvent.initEvent('blur', false, false);
-              _self.$module.dispatchEvent(blurEvent);
-            } catch (ex) {}
-          }
-          if (!event.ctrlKey && (key == keyCode.enter || key == keyCode.space)) {
-            _self.toggle.call(this);
-            event.preventDefault();
-          }
-        }
-      }
-
-      this.is = {
-        radio: function() {
-          return _self.$module.classList.contains(_self.className.radio);
-        },
-        checked: function() {
-          var checkedAttr = _self.$input.getAttribute('checked');
-          return (checkedAttr !== null || checkedAttr !== '') && checkedAttr;
-        },
-        unchecked: function() {
-          return !_self.is.checked();
-        }
-      }
-
-      this.can = {
-        change: function() {
-          var hasDisabled = _self.$module.classList.contains(_self.className.disabled);
-          var hasReadonly = _self.$module.classList.contains(_self.className.readOnly);
-          var hasPropDisabled = _self.$input.getAttribute('disabled');
-          return !(hasDisabled || hasReadonly || hasPropDisabled);
-        },
-        uncheck: function() {
-          return (typeof _self.settings.uncheckable === 'boolean') ? _self.settings.uncheckable : !_self.is.radio();
-        }
-      }
-
-      this.set = {
-        checked: function() {
-          _self.$module.classList.add(_self.className.checked);
-        },
-        tab: function() {
-          if (_self.$input.getAttribute('tabindex') === undefined) {
-            _self.$input.setAttribute('tabindex', 0);
-          }
-        }
-      }
-
-      this.has = {
-        label: function() {
-          return (_self.$label.length > 0);
-        }
-      }
-
-      this.add = {
-        events: function() {
-          _self.$module.addEventListener('click', _self.toggle);
-          _self.$input.addEventListener('keydown', _self.event.keydown);
-        }
-      }
-
-      this.remove = {
-        checked: function() {
-          _self.$module.classList.remove(_self.className.checked);
-        },
-        events: function() {
-          _self.$module.removeEventListener('click', _self.toggle);
-          _self.$input.removeEventListener('keydown', _self.event.keydown);
-        }
-      }
-
-      this.toggle = function(event) {
-        if (!_self.can.change()) {
+      checkbox.addEventListener('change', function(event) {
+        if (self.xtype !== "") {
           return;
         }
-        if (_self.is.unchecked()) {
-          _self.check();
-        } else if (_self.is.checked() && _self.can.uncheck()) {
-          _self.uncheck();
+        var value = event.target.checked;
+        self.value = value;
+      });
+
+      var toggle = this.$.toggle;
+      toggle.addEventListener('change', function(event) {
+        if (self.xtype !== "toggle") {
+          return;
         }
-      }
+        var value = event.target.checked;
+        self.value = value;
+      });
 
-    }; // end of initObjects
-
-    module.prototype.enable = function() {
-      this.$module.classList.remove(this.className.disabled);
-      this.$input.removeAttribute('disabled');
-      this.settings.onEnabled.call(this.$input);
-    };
-
-    module.prototype.disable = function() {
-      this.$module.classList.add(this.className.disabled);
-      this.$input.setAttribute('disabled', true);
-      this.settings.onDisabled.call(this.$input);
-    };
-
-    module.prototype.check = function() {
-      var ex;
-      this.$input.setAttribute('checked', 'true');
-
-      // using try catch here because there is bug in firefox:
-      // see here: https://bugzilla.mozilla.org/show_bug.cgi?id=867418
-      try {
-        var changeEvent = document.createEvent('HTMLEvents');
-        changeEvent.initEvent('change', false, false);
-        this.$input.dispatchEvent(changeEvent);
-      } catch (ex) {}
-
-      this.set.checked();
-
-      // using try catch here because there is bug in firefox:
-      // see here: https://bugzilla.mozilla.org/show_bug.cgi?id=867418
-      try {
-        var blurEvent = document.createEvent('HTMLEvents');
-        blurEvent.initEvent('blur', false, false);
-        this.$input.dispatchEvent(blurEvent);
-      } catch (ex) {}
-
-      this.settings.onChange.call(this.$input);
-      this.settings.onChecked.call(this.$input);
-    };
-
-    module.prototype.uncheck = function() {
-      var ex;
-      this.$input.removeAttribute('checked');
-
-      // using try catch here because there is bug in firefox:
-      // see here: https://bugzilla.mozilla.org/show_bug.cgi?id=867418
-      try {
-        var changeEvent = document.createEvent('HTMLEvents');
-        changeEvent.initEvent('change', false, false);
-        this.$input.dispatchEvent(changeEvent);
-      } catch (ex) {}
-
-      this.remove.checked();
-
-      // using try catch here because there is bug in firefox:
-      // see here: https://bugzilla.mozilla.org/show_bug.cgi?id=867418
-      try {
-        var blurEvent = document.createEvent('HTMLEvents');
-        blurEvent.initEvent('blur', false, false);
-        this.$input.dispatchEvent(blurEvent);
-      } catch (ex) {}
-
-      this.settings.onChange.call(this.$input);
-      this.settings.onUnchecked.call(this.$input);
+      this._isReady = true;
+    },
+    _updateUIValidState: function(isValid) {
+      var labelContainer = this.$.cbLabelContainer;
+      this.toggleClass('error', !isValid, labelContainer);
+      var labelContainer = this.$.tgLabelContainer;
+      this.toggleClass('error', !isValid, labelContainer);
+      var checkbox = this.$.checkbox;
+      this.toggleAttribute('invalid', !isValid, checkbox);
+      var contentContainer = this.$.contentContainer;
+      this.toggleClass('error', !isValid, contentContainer);
+      var hintContainer = this.$.hintContainer;
+      this.toggleClass('error', !isValid, hintContainer);
     }
-
-    // default settings for semantic checkbox
-    window.atFormCheckbox.settings = {
-      name: 'Checkbox',
-      namespace: 'checkbox',
-
-      // delegated event context
-      uncheckable: 'auto',
-      fireOnInit: true,
-
-      onChange: function() {},
-      onChecked: function() {},
-      onUnchecked: function() {},
-      onEnabled: function() {},
-      onDisabled: function() {},
-
-      className: {
-        checked: 'checked',
-        disabled: 'disabled',
-        radio: 'radio',
-        readOnly: 'read-only'
-      },
-
-      selector: {
-        input: 'input[type="checkbox"], input[type="radio"]',
-        label: 'label'
-      }
-
-    };
-
-    var util = {};
-
-    var class2type = {
-      "[object Boolean]": "boolean",
-      "[object Number]": "number",
-      "[object String]": "string",
-      "[object Function]": "function",
-      "[object Array]": "array",
-      "[object Date]": "date",
-      "[object RegExp]": "regexp",
-      "[object Object]": "object",
-      "[object Error]": "error",
-    };
-
-    var hasOwn = class2type.hasOwnProperty;
-
-    util.type = function(obj) {
-      if (obj == null) {
-        return obj + "";
-      }
-      // Support: Android<4.0, iOS<6 (functionish RegExp)
-      return typeof obj === "object" || typeof obj === "function" ?
-        class2type[Object.prototype.toString.call(obj)] || "object" :
-        typeof obj;
-    };
-
-    util.isArray = function(obj) {
-      return util.type(obj) == Array.isArray;
-    };
-
-    util.isWindow = function(obj) {
-      return obj != null && obj === obj.window;
-    };
-
-    util.isPlainObject = function(obj) {
-      // Not plain objects:
-      // - Any object or value whose internal [[Class]] property is not "[object Object]"
-      // - DOM nodes
-      // - window
-      if (util.type(obj) !== "object" || obj.nodeType || util.isWindow(obj)) {
-        return false;
-      }
-
-      if (obj.constructor &&
-        !hasOwn.call(obj.constructor.prototype, "isPrototypeOf")) {
-        return false;
-      }
-
-      // If the function hasn't returned already, we're confident that
-      // |obj| is a plain object, created by {} or constructed with new Object
-      return true;
-    };
-
-    util.isFunction = function(obj) {
-      return util.type(obj) === "function";
-    };
-
-    // copy paste and rework of jQuery.extend function; I put it in atFormCheckbox namespace
-    // use the same way as jQuery.extend
-    util.extend = function() {
-      var options, name, src, copy, copyIsArray, clone,
-        target = arguments[0] || {},
-        i = 1,
-        length = arguments.length,
-        deep = false;
-
-      // Handle a deep copy situation
-      if (typeof target === "boolean") {
-        deep = target;
-
-        // Skip the boolean and the target
-        target = arguments[i] || {};
-        i++;
-      }
-
-      // Handle case when target is a string or something (possible in deep copy)
-      if (typeof target !== "object" && !util.isFunction(target)) {
-        target = {};
-      }
-
-      // Extend jQuery itself if only one argument is passed
-      if (i === length) {
-        target = this;
-        i--;
-      }
-
-      for (; i < length; i++) {
-        // Only deal with non-null/undefined values
-        if ((options = arguments[i]) != null) {
-          // Extend the base object
-          for (name in options) {
-            src = target[name];
-            copy = options[name];
-
-            // Prevent never-ending loop
-            if (target === copy) {
-              continue;
-            }
-
-            // Recurse if we're merging plain objects or arrays
-            if (deep && copy && (util.isPlainObject(copy) || (copyIsArray = util.isArray(copy)))) {
-              if (copyIsArray) {
-                copyIsArray = false;
-                clone = src && util.isArray(src) ? src : [];
-
-              } else {
-                clone = src && util.isPlainObject(src) ? src : {};
-              }
-
-              // Never move original objects, clone them
-              target[name] = util.extend(deep, clone, copy);
-
-              // Don't bring in undefined values
-            } else if (copy !== undefined) {
-              target[name] = copy;
-            }
-          }
-        }
-      }
-
-      // Return the modified object
-      return target;
-    };
-
-  })(window, document, undefined);
+  });
 </script>

@@ -9,11 +9,11 @@
     }
   </style>
   <template>
-    <div vertical layout>
+    <div>
       <h4>Auto-updates</h4>
       <!-- in at-form-checkbox notify=true for value; {{ }} curly braces specify two way binding -->
       <!-- valueEcho will be updated when at-form-checkbox.value has changed -->
-      <at-form-checkbox value={{valueEcho}} toggle label="Auto-update apps over wifi only"></at-form-checkbox>
+      <at-form-checkbox value={{valueEcho}} xtype="toggle" label="Auto-update apps over wifi only"></at-form-checkbox>
       <div>
         Auto-update apps over wifi only is <span id="on" class="hidden">on</span> <span id="off" class="hidden">off</span>
       </div>
