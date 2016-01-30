@@ -42,18 +42,22 @@
       #errorHtml {
         @apply(--at-form-error-font);
       }
+      
+      papger-toggle-button, #toggle {
+         cursor: pointer;
+      }
     </style>
     <div id="atContainer" class="at-container">
       <div id="contentContainer">
         <div id="checkboxContainer" class="hidden">
-          <paper-checkbox id="checkbox" name$="{{name}}" disabled$="{{disabled}}">
+          <paper-checkbox id="checkbox" name$="{{name}}" disabled$="{{disabled}}" noink>
             <div id="cbLabelContainer">
               <label id="cbLabel">{{label}}</label>
             </div>
           </paper-checkbox>
         </div>
         <div id="toggleContainer" class="hidden">
-          <paper-toggle-button id="toggle" name$="{{name}}" disabled$="{{disabled}}">
+          <paper-toggle-button id="toggle" name$="{{name}}" disabled$="{{disabled}}" noink>
             <div id="tgLabelContainer">
               <label id="tgLabel">{{label}}</label>
             </div>
