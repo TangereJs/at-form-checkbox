@@ -6,71 +6,43 @@
 
 <dom-module id="at-form-checkbox">
   <template>
+    <style include="at-form-common"></style>
     <style>
-      .hidden {
-        display: none;
+      :host * {
+        box-sizing: border-box;
       }
 
-      .error {
-        color: var(--at-error-color);
-      }
-
-      .disabled {
-        @apply(--at-form-disabled);
-      }
-
-      p {
-        margin: 0;
+      :host {
+        @apply(--at-form-host);
       }
 
       #cbLabel {
         @apply(--at-form-label);
       }
 
-      #tgLabel {
+      #tbLabel {
         @apply(--at-form-label);
       }
 
-      #atContainer {
-        @apply(--at-form-element);
-      }
-
-      #contentContainer.error {
-        @apply(--at-form-error-margins);
-      }
-
-      #contentContainer.error .label-container {
-        color: var(--at-error-color);
-      }
-
-      #errorHtml {
-        @apply(--at-form-error-font);
-      }
-
-      papger-toggle-button, #checkbox {
+      papger-toggle-button,
+      #checkbox {
         cursor: pointer;
       }
     </style>
     <div id="atContainer" class="at-container">
-      <div id="contentContainer">
+      <div id="contentContainer" class="at-content-container">
         <template is="dom-if" if="{{_isCheckbox(xtype)}}" on-dom-change="_templateOnDomChange">
           <paper-checkbox id="checkbox" name$="{{name}}" disabled$="{{disabled}}" noink on-change="_onCheckboxChange">
-            <div id="labelContainer" class="label-container">
-              <label id="label">{{label}}</label>
-            </div>
+            <label id="cbLabel">{{label}}</label>
           </paper-checkbox>
         </template>
         <template is="dom-if" if="{{_isToggle(xtype)}}" on-dom-change="_templateOnDomChange">
           <paper-toggle-button id="checkbox" name$="{{name}}" disabled$="{{disabled}}" noink on-change="_onCheckboxChange">
-            <div id="labelContainer" class="label-container">
-              <label id="label">{{label}}</label>
-            </div>
+            <label id="tbLabel">{{label}}</label>
           </paper-toggle-button>
         </template>
       </div>
-      <div id="hintContainer" class="at-hint-container">
-        <div id="errorHtml" class="at-hint"></div>
-      </div>
+      <div id="hint"></div>
     </div>
   </template>
 </dom-module>
@@ -109,7 +81,6 @@
       value: {
         type: Object,
         value: false,
-        notify: true,
         observer: 'valueChanged'
       },
       /**
@@ -132,7 +103,6 @@
       type: "boolean",
       xtype: "toggle"
     }],
-    // _scopeCssViaAttr: true,
     _isCheckbox: function(xtype) {
       return xtype === '';
     },
@@ -147,7 +117,9 @@
       }
     },
     valueChanged: function(newValue, oldValue) {
-      if (!this._isReady) { return; }
+      if (!this._isReady) {
+        return;
+      }
       var tempValue = this._AT3ParseBool(newValue);
       var checkbox = this._getCheckboxElement();
       if (checkbox) {
@@ -181,32 +153,40 @@
         this.validate();
       }
     },
-    _templateOnDomChange: function (event) {
+    _templateOnDomChange: function(event) {
       this.valueChanged(this.value, undefined);
       this._updateUIValidState(this.valid);
     },
     ready: function() {
-      this._isInternalUpdate = false;
       this._isReady = true;
     },
-    _onCheckboxChange: function (event) {
+    _onCheckboxChange: function(event) {
       var value = event.target.checked;
       this.value = value;
+      this.validate();
+      this.fire('value-changed', { value: this.value });
     },
     _updateUIValidState: function(isValid) {
       var checkbox = this._getCheckboxElement();
       if (checkbox) {
         this.toggleAttribute('invalid', !isValid, checkbox);
       }
+      var label = this._getLabelElement();
+      this.toggleClass('error', !isValid, label);
       var contentContainer = this.$.contentContainer;
       this.toggleClass('error', !isValid, contentContainer);
-      var hintContainer = this.$.hintContainer;
-      this.toggleClass('error', !isValid, hintContainer);
+      var hint = this.$.hint;
+      this.toggleClass('error', !isValid, hint);
     },
-    _getCheckboxElement: function () {
+    _getCheckboxElement: function() {
       var selector = this.xtype === "" ? "paper-checkbox" : "paper-toggle-button";
       var checkbox = this.$$(selector);
       return checkbox;
+    },
+    _getLabelElement: function () {
+      var selector = this.xtype === "" ? '#cbLabel' : '#tbLabel';
+      var label = this.$$(selector);
+      return label;
     }
   });
 </script>
