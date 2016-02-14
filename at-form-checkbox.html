@@ -20,6 +20,14 @@
         min-height:24px;
       }
       
+      /* workaround for IE11 flexbox min-height bug */
+      _:-ms-lang(x), :host::before {
+          content: "";
+          display: inline-block;
+          min-height: 12px;
+          visibility: hidden;
+      }
+
       #cbLabel {
         @apply(--at-form-label);
       }
@@ -52,7 +60,8 @@
         opacity: 0.65;
       }
     </style>
-    <div id="atContainer" class="at-container">
+
+    <div id="atContainer" class="at-container">      
       <div id="contentContainer" class="at-content-container">
         <template is="dom-if" if="{{_isCheckbox(xtype)}}" on-dom-change="_templateOnDomChange">
           <paper-checkbox id="checkbox" name$="{{name}}" disabled$="{{disabled}}" noink on-change="_onCheckboxChange">
