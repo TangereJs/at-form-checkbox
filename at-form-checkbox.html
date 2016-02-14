@@ -3,6 +3,7 @@
 <link rel="import" href="../at-form-behaviors/at-form-behaviors-validation.html">
 <link rel="import" href="../paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../iron-label/iron-label.html">
 
 <dom-module id="at-form-checkbox">
   <template>
@@ -11,34 +12,55 @@
       :host * {
         box-sizing: border-box;
       }
-
+      
       :host {
         @apply(--at-form-host);
+        @apply(--layout-vertical);
+        @apply(--layout-justified);
       }
-
+      
       #cbLabel {
         @apply(--at-form-label);
       }
-
+      
       #tbLabel {
         @apply(--at-form-label);
       }
-
+      
+      #atContainer {
+        @apply(--layout-flex);
+        @apply(--layout-vertical);
+      }
+      
+      #hint {
+        line-height: 20px;
+      }
+      
+      #contentContainer {
+        @apply(--layout-flex);
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+      }
+      
       papger-toggle-button,
       #checkbox {
         cursor: pointer;
+      }
+      
+      paper-toggle-button[disabled] iron-label {
+        opacity: 0.65;
       }
     </style>
     <div id="atContainer" class="at-container">
       <div id="contentContainer" class="at-content-container">
         <template is="dom-if" if="{{_isCheckbox(xtype)}}" on-dom-change="_templateOnDomChange">
           <paper-checkbox id="checkbox" name$="{{name}}" disabled$="{{disabled}}" noink on-change="_onCheckboxChange">
-            <label id="cbLabel">{{label}}</label>
+            <iron-label id="cbLabel">{{label}}</iron-label>
           </paper-checkbox>
         </template>
         <template is="dom-if" if="{{_isToggle(xtype)}}" on-dom-change="_templateOnDomChange">
           <paper-toggle-button id="checkbox" name$="{{name}}" disabled$="{{disabled}}" noink on-change="_onCheckboxChange">
-            <label id="tbLabel">{{label}}</label>
+            <iron-label id="tbLabel">{{label}}</iron-label>
           </paper-toggle-button>
         </template>
       </div>
@@ -103,20 +125,20 @@
       type: "boolean",
       xtype: "toggle"
     }],
-    _isCheckbox: function(xtype) {
+    _isCheckbox: function (xtype) {
       return xtype === '';
     },
-    _isToggle: function(xtype) {
+    _isToggle: function (xtype) {
       return xtype === 'toggle';
     },
-    hideChanged: function(newValue, oldValue) {
+    hideChanged: function (newValue, oldValue) {
       var atContainer = this.$.atContainer;
       this.toggleClass('hidden', newValue, atContainer);
       if (this._isReady) {
         this.validate();
       }
     },
-    valueChanged: function(newValue, oldValue) {
+    valueChanged: function (newValue, oldValue) {
       if (!this._isReady) {
         return;
       }
@@ -126,14 +148,14 @@
         checkbox.checked = tempValue;
       }
     },
-    focus: function() {
+    focus: function () {
       var checkbox = this._getCheckboxElement();
       if (checkbox) {
         Polymer.dom(checkbox).setAttribute('focused');
       }
     },
     // *ij* see https://adenin.atlassian.net/browse/AT-3 to understand why this function exists and what it does
-    _AT3ParseBool: function(value) {
+    _AT3ParseBool: function (value) {
       // Boolean(value) covers true, false, 1 and 0 but doesn't work for "0" and "1" or "true" or "false"
       var result = Boolean(value);
       if (value === "0" || value === "\"0\"") {
@@ -148,25 +170,27 @@
 
       return result;
     },
-    disabledChanged: function(newValue, oldValue) {
+    disabledChanged: function (newValue, oldValue) {
       if (this._isReady) {
         this.validate();
       }
     },
-    _templateOnDomChange: function(event) {
+    _templateOnDomChange: function (event) {
       this.valueChanged(this.value, undefined);
       this._updateUIValidState(this.valid);
     },
-    ready: function() {
+    ready: function () {
       this._isReady = true;
     },
-    _onCheckboxChange: function(event) {
+    _onCheckboxChange: function (event) {
       var value = event.target.checked;
       this.value = value;
       this.validate();
-      this.fire('value-changed', { value: this.value });
+      this.fire('value-changed', {
+        value: this.value
+      });
     },
-    _updateUIValidState: function(isValid) {
+    _updateUIValidState: function (isValid) {
       var checkbox = this._getCheckboxElement();
       if (checkbox) {
         this.toggleAttribute('invalid', !isValid, checkbox);
@@ -178,7 +202,7 @@
       var hint = this.$.hint;
       this.toggleClass('error', !isValid, hint);
     },
-    _getCheckboxElement: function() {
+    _getCheckboxElement: function () {
       var selector = this.xtype === "" ? "paper-checkbox" : "paper-toggle-button";
       var checkbox = this.$$(selector);
       return checkbox;
