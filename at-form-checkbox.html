@@ -12,14 +12,14 @@
       :host * {
         box-sizing: border-box;
       }
-      
+
       :host {
         @apply(--at-form-host);
         @apply(--layout-vertical);
         @apply(--layout-justified);
         min-height:24px;
       }
-      
+
       /* workaround for IE11 flexbox min-height bug */
       _:-ms-fullscreen, :host::before {
           content: "";
@@ -31,37 +31,37 @@
       #cbLabel {
         @apply(--at-form-label);
       }
-      
+
       #tbLabel {
         @apply(--at-form-label);
       }
-      
+
       #atContainer {
         @apply(--layout-flex);
         @apply(--layout-vertical);
       }
-      
+
       #hint {
         line-height: 20px;
       }
-      
+
       #contentContainer {
         @apply(--layout-flex);
         @apply(--layout-horizontal);
         @apply(--layout-center);
       }
-      
+
       papger-toggle-button,
       #checkbox {
         cursor: pointer;
       }
-      
+
       paper-toggle-button[disabled] iron-label {
         opacity: 0.65;
       }
     </style>
 
-    <div id="atContainer" class="at-container">      
+    <div id="atContainer" class="at-container">
       <div id="contentContainer" class="at-content-container">
         <template is="dom-if" if="{{_isCheckbox(xtype)}}" on-dom-change="_templateOnDomChange">
           <paper-checkbox id="checkbox" name$="{{name}}" disabled$="{{disabled}}" noink on-change="_onCheckboxChange">
@@ -186,11 +186,15 @@
       }
     },
     _templateOnDomChange: function (event) {
+      this._attachFocusBlurEvents();
       this.valueChanged(this.value, undefined);
       this._updateUIValidState(this.valid);
     },
     ready: function () {
       this._isReady = true;
+    },
+    attached: function () {
+      this._attachFocusBlurEvents();
     },
     _onCheckboxChange: function (event) {
       var value = event.target.checked;
@@ -209,8 +213,6 @@
       this.toggleClass('error', !isValid, label);
       var contentContainer = this.$.contentContainer;
       this.toggleClass('error', !isValid, contentContainer);
-      var hint = this.$.hint;
-      this.toggleClass('error', !isValid, hint);
     },
     _getCheckboxElement: function () {
       var selector = this.xtype === "" ? "paper-checkbox" : "paper-toggle-button";
@@ -221,6 +223,10 @@
       var selector = this.xtype === "" ? '#cbLabel' : '#tbLabel';
       var label = this.$$(selector);
       return label;
+    },
+    _getFocusableElement: function () {
+      var focusable = this._getCheckboxElement();
+      return focusable;
     }
   });
 </script>
