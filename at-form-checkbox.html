@@ -88,16 +88,19 @@
     properties: {
       name: {
         type: String,
-        value: ''
+        value: '',
+        title: 'Name'
       },
       label: {
         type: String,
-        value: ''
+        value: '',
+        title: 'Label'
       },
       disabled: {
         type: Boolean,
         value: false,
-        observer: 'disabledChanged'
+        observer: 'disabledChanged',
+        title: 'Field value can not be changed'
       },
       xtype: {
         type: String,
@@ -114,7 +117,8 @@
       value: {
         type: Object,
         value: false,
-        observer: 'valueChanged'
+        observer: 'valueChanged',
+        title: 'Value'
       },
       /**
        * Hides the element. When hidden nothing is displayed for the element
@@ -125,7 +129,8 @@
       hide: {
         type: Boolean,
         value: false,
-        observer: 'hideChanged'
+        observer: 'hideChanged',
+        title: 'Field is invisible'
       }
     },
     $meta: [{
