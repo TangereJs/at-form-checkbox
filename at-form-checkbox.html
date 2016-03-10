@@ -65,12 +65,12 @@
     <div id="atContainer" class="at-container">
       <div id="contentContainer" class="at-content-container">
         <template is="dom-if" if="{{_isCheckbox(xtype)}}" on-dom-change="_templateOnDomChange">
-          <paper-checkbox id="checkbox" name$="{{name}}" disabled$="{{disabled}}" noink on-change="_onCheckboxChange">
+          <paper-checkbox id="checkbox" disabled$="{{disabled}}" noink on-change="_onCheckboxChange">
             <iron-label id="cbLabel">{{label}}</iron-label>
           </paper-checkbox>
         </template>
         <template is="dom-if" if="{{_isToggle(xtype)}}" on-dom-change="_templateOnDomChange">
-          <paper-toggle-button id="checkbox" name$="{{name}}" disabled$="{{disabled}}" noink on-change="_onCheckboxChange">
+          <paper-toggle-button id="checkbox" disabled$="{{disabled}}" noink on-change="_onCheckboxChange">
             <iron-label id="tbLabel">{{label}}</iron-label>
           </paper-toggle-button>
         </template>
@@ -86,11 +86,6 @@
     is: "at-form-checkbox",
     behaviors: [ Tangere.behaviors.formValidation, Tangere.behaviors.i18n ],
     properties: {
-      name: {
-        type: String,
-        value: '',
-        title: 'Name'
-      },
       label: {
         type: String,
         value: '',
