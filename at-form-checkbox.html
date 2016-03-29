@@ -33,8 +33,16 @@
         @apply(--at-form-label);
       }
 
+      #cbLabel.hidden {
+        display: none;
+      }
+
       #tbLabel {
         @apply(--at-form-label);
+      }
+
+      #tbLabel.hidden {
+        display: none;
       }
 
       #atContainer {
@@ -65,12 +73,12 @@
     <div id="atContainer" class="at-container">
       <div id="contentContainer" class="at-content-container">
         <template is="dom-if" if="{{_isCheckbox(xtype)}}" on-dom-change="_templateOnDomChange">
-          <paper-checkbox id="checkbox" disabled$="{{disabled}}" noink on-change="_onCheckboxChange">
+          <paper-checkbox id="checkbox" disabled$="{{disabled}}" noink on-change="_onCheckboxChange" on-focus="_onCheckboxFocus">
             <iron-label id="cbLabel">{{label}}</iron-label>
           </paper-checkbox>
         </template>
         <template is="dom-if" if="{{_isToggle(xtype)}}" on-dom-change="_templateOnDomChange">
-          <paper-toggle-button id="checkbox" disabled$="{{disabled}}" noink on-change="_onCheckboxChange">
+          <paper-toggle-button id="checkbox" disabled$="{{disabled}}" noink on-change="_onCheckboxChange" on-focus="_onCheckboxFocus">
             <iron-label id="tbLabel">{{label}}</iron-label>
           </paper-toggle-button>
         </template>
@@ -91,6 +99,17 @@
         value: '',
         title: 'Label'
       },
+      /**
+       * @property hideLabel
+       */
+
+      hideLabel: {
+        type: Boolean,
+        value: false,
+        observer: 'hideLabelChanged',
+        title: 'Do not show the label'
+      },
+
       disabled: {
         type: Boolean,
         value: false,
@@ -149,6 +168,16 @@
         this.validate();
       }
     },
+    hideLabelChanged: function (newValue, oldValue) {
+      var cbLabel = this.$$("#cbLabel");
+      if (cbLabel) {
+        this.toggleClass('hidden', newValue, cbLabel);
+      }
+      var tbLabel = this.$$("#tbLabel");
+      if (tbLabel) {
+        this.toggleClass('hidden', newValue, tbLabel);
+      }
+    },
     valueChanged: function (newValue, oldValue) {
       if (!this._isReady) {
         return;
@@ -190,6 +219,7 @@
       this._attachFocusBlurEvents();
       this.valueChanged(this.value, undefined);
       this._updateUIValidState(this.valid);
+      this.hideLabelChanged(this.hideLabel, undefined);
     },
     ready: function () {
       this._isReady = true;
@@ -204,6 +234,15 @@
       this.fire('value-changed', {
         value: this.value
       });
+    },
+    _onCheckboxFocus: function (event) {
+      var target = event.target;
+
+      var ripple = target.getRipple();
+      this.async(function () {
+        ripple.holdDown = false;
+      }, 500);
+
     },
     _updateUIValidState: function (isValid) {
       var checkbox = this._getCheckboxElement();
