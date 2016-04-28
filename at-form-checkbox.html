@@ -192,7 +192,7 @@
     focus: function () {
       var checkbox = this._getCheckboxElement();
       if (checkbox) {
-        Polymer.dom(checkbox).setAttribute('focused');
+        Polymer.dom(checkbox).setAttribute('focused', true);
       }
     },
     // *ij* see https://adenin.atlassian.net/browse/AT-3 to understand why this function exists and what it does

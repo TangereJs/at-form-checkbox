@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+
+<head>
+
+  <title>at-form-checkbox tests</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../iron-test-helpers/test-helpers.js"></script>
+  <script src="../../iron-test-helpers/mock-interactions.js"></script>
+
+  <link rel="import" href="../at-form-checkbox.html">
+
+</head>
+
+<body>
+
+  <test-fixture id="basic">
+    <template>
+      <at-form-checkbox></at-form-checkbox>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="valueViaAttr">
+    <template>
+      <at-form-checkbox value=true></at-form-checkbox>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="required">
+    <template>
+      <at-form-checkbox required></at-form-checkbox>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="disabled">
+    <template>
+      <at-form-checkbox disabled></at-form-checkbox>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="hidden">
+    <template>
+      <at-form-checkbox hide></at-form-checkbox>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="requiredAndDisabled">
+    <template>
+      <at-form-checkbox required disabled></at-form-checkbox>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="requiredAndHidden">
+    <template>
+      <at-form-checkbox required hide></at-form-checkbox>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="errorMessageValidFalse">
+    <template>
+      <at-form-checkbox error-message="demo error message"></at-form-checkbox>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="isHintDisplayed">
+    <template>
+      <at-form-checkbox hint="This is demo hint"></at-form-checkbox>
+    </template>
+  </test-fixture>
+
+  <script>
+    suite('basic', function() {
+
+      test('setting value sets the input value', function() {
+        var input = fixture('basic');
+        input.value = true;
+
+        flush(function() {
+          assert.equal(input._getFocusableElement().value, "on", 'inputElement.value is not on');
+          assert.equal(input.value, true, 'input.value is not true');
+        });
+      });
+
+      test('setting value as attr sets the value', function() {
+        var input = fixture('valueViaAttr');
+
+        flush(function() {
+          assert.equal(input._getFocusableElement().value, "on", 'inputElement.value is not on');
+          assert.equal(input.value, true, 'input.value is not true');
+        });
+      });
+
+      test('required sets validation message', function() {
+        /* required doesn't make sense for at-form-checkbox */
+      });
+
+      test('disabled sets css classes', function() {
+        var input = fixture('disabled');
+        assert.equal(input.disabled, true, 'disabled property is true');
+        flush(function() {
+          var inputElement = input._getFocusableElement();
+          assert.equal(inputElement.hasAttribute('disabled'), true, 'input element disabled attribute set');
+        });
+      });
+
+      test('hidden sets css classes', function() {
+        var input = fixture('hidden');
+        assert.equal(input.hide, true, 'hide property is true');
+        assert.equal(input.$.atContainer.classList.contains('hidden'), true, 'container doesn\'t have hidden class');
+      });
+
+      test('required and disabled => valid = true', function() {
+        /* required doesn't make sense for at-form-checkbox */
+      });
+
+      test('required and hidden => valid = true', function() {
+        /* required doesn't make sense for at-form-checkbox */
+      });
+
+      test('errorMessage => valid = false', function() {
+        var input = fixture('errorMessageValidFalse');
+        assert.equal(input.errorMessage, 'demo error message', 'error message is correctly set');
+        assert.equal(input.valid, true, 'input is valid because error message is set as attribute');
+        input.errorMessage = 'Another version of demo error message';
+        assert.equal(input.errorMessage, 'Another version of demo error message', 'error message is correctly set');
+        assert.equal(input.valid, false, 'input is invalid because error message is set as property');
+      });
+
+      test('is hint displayed', function(done) {
+        var input = fixture('isHintDisplayed');
+        // I do not know now to make this test work
+        // focusing the at-form-checkbox in automated testing
+        // doesn't trigger 'focus' event in at-form-behaviors-validation
+        // in manual testing it works fine
+        assert.equal(input.hint, "This is demo hint", 'input.hint property is not set');
+        flush(function () {
+          // MockInteractions.focus(input);
+          input.focus();
+          assert.equal(input.$.hint.innerHTML, "This is demo hint", 'input.hint text is incorrect');
+          done();
+        });
+      });
+    });
+  </script>
+
+</body>
+
+</html>
