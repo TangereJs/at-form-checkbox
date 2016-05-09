@@ -135,14 +135,10 @@
 
       test('is hint displayed', function(done) {
         var input = fixture('isHintDisplayed');
-        // I do not know now to make this test work
-        // focusing the at-form-checkbox in automated testing
-        // doesn't trigger 'focus' event in at-form-behaviors-validation
-        // in manual testing it works fine
+        
         assert.equal(input.hint, "This is demo hint", 'input.hint property is not set');
         flush(function () {
-          // MockInteractions.focus(input);
-          input.focus();
+          MockInteractions.focus(input.$$('#checkbox'));
           assert.equal(input.$.hint.innerHTML, "This is demo hint", 'input.hint text is incorrect');
           done();
         });
