@@ -188,6 +188,8 @@
       if (checkbox) {
         checkbox.checked = tempValue;
       }
+      
+      this.fire('value-changed', { value: newValue });
     },
     focus: function () {
       var checkbox = this._getCheckboxElement();
