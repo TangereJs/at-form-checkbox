@@ -183,13 +183,17 @@
       if (!this._isReady) {
         return;
       }
-      var tempValue = this._AT3ParseBool(newValue);
+
+      this._updateUIForValue(newValue);
+
+      this.fire('value-changed', { value: newValue });
+    },
+    _updateUIForValue: function (value) {
+      var parsedValue = this._AT3ParseBool(value);
       var checkbox = this._getCheckboxElement();
       if (checkbox) {
-        checkbox.checked = tempValue;
+        checkbox.checked = parsedValue;
       }
-      
-      this.fire('value-changed', { value: newValue });
     },
     focus: function () {
       var checkbox = this._getCheckboxElement();
@@ -220,7 +224,7 @@
     },
     _templateOnDomChange: function (event) {
       this._attachFocusBlurEvents();
-      this.valueChanged(this.value, undefined);
+      this._updateUIForValue(this.value);
       this._updateUIValidState(this.valid);
       this.hideLabelChanged(this.hideLabel, undefined);
     },
