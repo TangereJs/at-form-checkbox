@@ -1,6 +1,6 @@
 <link rel="import" href="../tangere/tangere.html">
 <link rel="import" href="../at-theme/at-theme.html">
-<link rel="import" href="../at-form-behaviors/at-form-behaviors-validation.html">
+<link rel="import" href="../at-form-behaviors/at-form-behaviors.html">
 <link rel="import" href="../at-i18n/at-i18n-behavior.html">
 <link rel="import" href="../paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../paper-toggle-button/paper-toggle-button.html">
@@ -50,6 +50,10 @@
         @apply(--layout-vertical);
       }
 
+      #atContainer.hidden {
+        display: none;
+      }
+
       #hint {
         line-height: 20px;
       }
@@ -92,7 +96,7 @@
   "use strict";
   Polymer({
     is: "at-form-checkbox",
-    behaviors: [ Tangere.behaviors.formValidation, Tangere.behaviors.i18n ],
+    behaviors: [ Tangere.behaviors.formUIGeneric, Tangere.behaviors.i18n ],
     properties: {
       label: {
         type: String,
@@ -184,7 +188,9 @@
         return;
       }
 
-      this._updateUIForValue(newValue);
+      var parsedValue = this._AT3ParseBool(newValue);
+
+      this._updateUIForValue(parsedValue);
 
       this.fire('value-changed', { value: newValue });
     },
@@ -251,6 +257,13 @@
       }, 500);
 
     },
+
+    validate: function () {
+      var validationResult = this._validateBaseData();
+      this._handleValidationResult(validationResult);
+      return validationResult.isValid;
+    },
+
     _updateUIValidState: function (isValid) {
       var checkbox = this._getCheckboxElement();
       if (checkbox) {
