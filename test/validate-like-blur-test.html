@@ -28,9 +28,6 @@
   </test-fixture>
 
   <script>
-    /*
-      These tests will fail in Chrome under shadow DOM because
-    */
     suite('validate like blur tests', function() {
 
       // helper function that figures out whether we are in shadowDOM or shadyDOM
@@ -44,11 +41,10 @@
       test('validate like blur, set input.value', function(done) {
         var input = fixture('validateLikeBlur');
 
-        input.addEventListener('dom-change', function(event) {
+        flush(function () {
           var inputElement = input._getFocusableElement();
-          debugger;
-          assert.equal(input.value, "", 'Input value is not correct');
-          assert.equal(inputElement.value, "", 'Input element value is not correct');
+          assert.equal(input.value, false, 'Input value is not correct');
+          assert.equal(inputElement.value, "on", 'Input element value is not correct');
 
           inputElement.focus();
           var activeElement = document.activeElement;
@@ -61,12 +57,12 @@
           input.value = "lorem ipsum";
 
           assert.equal(input.value, "lorem ipsum", 'Input value is not correct');
-          assert.equal(inputElement.value, "lorem ipsum", 'Input element value is not correct');
+          assert.equal(inputElement.value, "on", 'Input element value is not correct');
 
           input.validate();
 
           assert.equal(input.value, "lorem ipsum", 'Input value is not correct');
-          assert.equal(inputElement.value, "lorem ipsum", 'Input element value is not correct');
+          assert.equal(inputElement.value, "on", 'Input element value is not correct');
 
           assert.equal(inputElement.id, activeElement.id, 'Input element has lost focus');
           done();
@@ -74,32 +70,35 @@
 
       });
 
-      test('validate like blur, set inputElement.value', function() {
+      test('validate like blur, set inputElement.value', function(done) {
         var input = fixture('validateLikeBlur');
-        var inputElement = input._getFocusableElement();
+        flush(function () {
+          var inputElement = input._getFocusableElement();
 
-        assert.equal(input.value, "", 'Input value is not correct');
-        assert.equal(inputElement.value, "", 'Input element value is not correct');
+          assert.equal(input.value, false, 'Input value is not correct');
+          assert.equal(inputElement.value, "on", 'Input element value is not correct');
 
-        inputElement.focus();
-        var activeElement = document.activeElement;
-        if (getDomMode(input) === 'shadowDOM') {
-          activeElement = input.shadowRoot.activeElement;
-        }
+          inputElement.focus();
+          var activeElement = document.activeElement;
+          if (getDomMode(input) === 'shadowDOM') {
+            activeElement = input.shadowRoot.activeElement;
+          }
 
-        assert.equal(inputElement.id, activeElement.id, 'Input element has lost focus');
+          assert.equal(inputElement.id, activeElement.id, 'Input element has lost focus');
 
-        inputElement.value = "lorem ipsum";
+          inputElement.value = "lorem ipsum";
 
-        assert.equal(input.value, "", 'Input value is not correct');
-        assert.equal(inputElement.value, "lorem ipsum", 'Input element value is not correct');
+          assert.equal(input.value, false, 'Input value is not correct');
+          assert.equal(inputElement.value, "lorem ipsum", 'Input element value is not correct');
 
-        input.validate();
+          input.validate();
 
-        assert.equal(input.value, "lorem ipsum", 'Input value is not correct');
-        assert.equal(inputElement.value, "lorem ipsum", 'Input element value is not correct');
+          assert.equal(input.value, false, 'Input value is not correct');
+          assert.equal(inputElement.value, "lorem ipsum", 'Input element value is not correct');
 
-        assert.equal(inputElement.id, activeElement.id, 'Input element has lost focus');
+          assert.equal(inputElement.id, activeElement.id, 'Input element has lost focus');
+          done();
+        });
       });
 
     });
