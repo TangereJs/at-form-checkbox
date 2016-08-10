@@ -1,0 +1,147 @@
+<!doctype html>
+<html>
+<head>
+
+  <title>at-form-checkbox tests</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../iron-test-helpers/test-helpers.js"></script>
+  <script src="../../iron-test-helpers/mock-interactions.js"></script>
+
+  <link rel="import" href="../at-form-checkbox.html">
+</head>
+<body>
+
+  <test-fixture id="noAutovalidate">
+    <template>
+      <at-form-checkbox></at-form-checkbox>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="autovalidate">
+    <template>
+      <at-form-checkbox autovalidate></at-form-checkbox>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="propertyTests">
+    <template>
+      <at-form-checkbox></at-form-checkbox>
+    </template>
+  </test-fixture>
+
+  <script>
+
+    suite('autovalidate tests', function() {
+
+
+
+      suite('autovalidate set as attribute', function () {
+
+        test('no autovalidate, do not show errors', function () {
+          var element = fixture('noAutovalidate');
+          element.errorMessage = "lorem ipsum";
+
+          var isValid = element.validate();
+          assert.equal(false, isValid, "element is valid");
+
+          var hint = Polymer.dom(element.$.hint);
+          assert.equal('', hint.textContent, 'Error message not set correctly');
+        });
+
+        test('no autovalidate, do show errors', function () {
+          var element = fixture('noAutovalidate');
+          element.errorMessage = "lorem ipsum";
+
+          var isValid = element.validate(true);
+          assert.equal(false, isValid, "element is valid");
+
+          var hint = Polymer.dom(element.$.hint);
+          assert.equal('lorem ipsum', hint.textContent, 'Error message not set correctly');
+        });
+
+        test('autovalidate, do not show errors', function () {
+          var element = fixture('autovalidate');
+          element.errorMessage = "lorem ipsum";
+
+          var isValid = element.validate();
+          assert.equal(false, isValid, "element is valid");
+
+          var hint = Polymer.dom(element.$.hint);
+          assert.equal('lorem ipsum', hint.textContent, 'Error message not set correctly');
+        });
+
+        test('autovalidate, do show errors', function () {
+          var element = fixture('autovalidate');
+          element.errorMessage = "lorem ipsum";
+
+          var isValid = element.validate(true);
+          assert.equal(false, isValid, "element is valid");
+
+          var hint = Polymer.dom(element.$.hint);
+          assert.equal('lorem ipsum', hint.textContent, 'Error message not set correctly');
+        });
+
+      });
+
+      suite('autovalidate set as property', function () {
+
+        test('no autovalidate, do not show errors', function () {
+          var element = fixture('propertyTests');
+          element.errorMessage = "lorem ipsum";
+
+          var isValid = element.validate();
+          assert.equal(false, isValid, "element is valid");
+
+          var hint = Polymer.dom(element.$.hint);
+          assert.equal('', hint.textContent, 'Error message not set correctly');
+        });
+
+        test('no autovalidate, do show errors', function () {
+          var element = fixture('propertyTests');
+          element.errorMessage = "lorem ipsum";
+
+          var isValid = element.validate(true);
+          assert.equal(false, isValid, "element is valid");
+
+          var hint = Polymer.dom(element.$.hint);
+          assert.equal('lorem ipsum', hint.textContent, 'Error message not set correctly');
+        });
+
+        test('autovalidate, do not show errors', function () {
+          var element = fixture('propertyTests');
+          element.autovalidate = true;
+          element.errorMessage = "lorem ipsum";
+
+          var isValid = element.validate();
+          assert.equal(false, isValid, "element is valid");
+
+          var hint = Polymer.dom(element.$.hint);
+          assert.equal('lorem ipsum', hint.textContent, 'Error message not set correctly');
+        });
+
+        test('autovalidate, do show errors', function () {
+          var element = fixture('propertyTests');
+          element.autovalidate = true;
+          element.errorMessage = "lorem ipsum";
+
+          var isValid = element.validate(true);
+          assert.equal(false, isValid, "element is valid");
+
+          var hint = Polymer.dom(element.$.hint);
+          assert.equal('lorem ipsum', hint.textContent, 'Error message not set correctly');
+        });
+
+      });
+
+    });
+  </script>
+
+</body>
+</html>

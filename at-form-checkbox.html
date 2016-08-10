@@ -106,20 +106,38 @@
       /**
        * @property hideLabel
        */
-
       hideLabel: {
         type: Boolean,
         value: false,
-        observer: 'hideLabelChanged',
+        observer: '_hideLabelChanged',
         title: 'Do not show the label'
       },
 
       disabled: {
         type: Boolean,
         value: false,
-        observer: 'disabledChanged',
         title: 'Field value can not be changed'
       },
+      /**
+       * Hides the element. When hidden nothing is displayed for the element
+       * @property hide
+       * @type Boolean
+       * @default false
+       */
+      hide: {
+        type: Boolean,
+        value: false,
+        observer: '_hideChanged',
+        title: 'Field is invisible'
+      },
+
+      value: {
+        type: Object,
+        value: false,
+        observer: '_valueChanged',
+        title: 'Value'
+      },
+
       xtype: {
         type: String,
         value: '',
@@ -132,26 +150,12 @@
           title: "Toggle",
           value: "toggle"
         }]
-      },
-      value: {
-        type: Object,
-        value: false,
-        observer: 'valueChanged',
-        title: 'Value'
-      },
-      /**
-       * Hides the element. When hidden nothing is displayed for the element
-       * @property hide
-       * @type Boolean
-       * @default false
-       */
-      hide: {
-        type: Boolean,
-        value: false,
-        observer: 'hideChanged',
-        title: 'Field is invisible'
       }
+
     },
+    observers: [
+      '_internalUpdateValidState(disabled, hide)'
+    ],
     $meta: [{
       title: "Checkbox",
       type: "boolean"
@@ -166,14 +170,8 @@
     _isToggle: function (xtype) {
       return xtype === 'toggle';
     },
-    hideChanged: function (newValue, oldValue) {
-      var atContainer = this.$.atContainer;
-      this.toggleClass('hidden', newValue, atContainer);
-      if (this._isReady) {
-        this.validate();
-      }
-    },
-    hideLabelChanged: function (newValue, oldValue) {
+
+    _hideLabelChanged: function (newValue, oldValue) {
       var cbLabel = this.$$("#cbLabel");
       if (cbLabel) {
         this.toggleClass('hidden', newValue, cbLabel);
@@ -183,7 +181,45 @@
         this.toggleClass('hidden', newValue, tbLabel);
       }
     },
-    valueChanged: function (newValue, oldValue) {
+
+    ready: function () {
+      this._isReady = true;
+      this._internalUpdateValidState(this.disabled, this.hide);
+    },
+
+    attached: function () {
+      this._attachFocusBlurEvents();
+    },
+
+    _hideChanged: function (newValue, oldValue) {
+      var atContainer = this.$.atContainer;
+      this.toggleClass('hidden', newValue, atContainer);
+    },
+
+    _internalUpdateValidState: function (disabled, hide) {
+      if (!this._isReady) { return; }
+      this.validate();
+    },
+
+    validate: function (showError) {
+      if (showError === undefined) { showError = this.autovalidate; }
+      var validationResult = this._validateBaseData();
+      if (showError) { this._handleValidationResult(validationResult); }
+      return validationResult.isValid;
+    },
+
+    _updateUIValidState: function (isValid) {
+      var checkbox = this._getCheckboxElement();
+      if (checkbox) {
+        this.toggleAttribute('invalid', !isValid, checkbox);
+      }
+      var label = this._getLabelElement();
+      this.toggleClass('error', !isValid, label);
+      var contentContainer = this.$.contentContainer;
+      this.toggleClass('error', !isValid, contentContainer);
+    },
+
+    _valueChanged: function (newValue, oldValue) {
       if (!this._isReady) {
         return;
       }
@@ -223,23 +259,14 @@
 
       return result;
     },
-    disabledChanged: function (newValue, oldValue) {
-      if (this._isReady) {
-        this.validate();
-      }
-    },
+
     _templateOnDomChange: function (event) {
       this._attachFocusBlurEvents();
       this._updateUIForValue(this.value);
       this._updateUIValidState(this.valid);
-      this.hideLabelChanged(this.hideLabel, undefined);
+      this._hideLabelChanged(this.hideLabel, undefined);
     },
-    ready: function () {
-      this._isReady = true;
-    },
-    attached: function () {
-      this._attachFocusBlurEvents();
-    },
+
     _onCheckboxChange: function (event) {
       var value = event.target.checked;
       this.value = value;
@@ -258,22 +285,6 @@
 
     },
 
-    validate: function () {
-      var validationResult = this._validateBaseData();
-      this._handleValidationResult(validationResult);
-      return validationResult.isValid;
-    },
-
-    _updateUIValidState: function (isValid) {
-      var checkbox = this._getCheckboxElement();
-      if (checkbox) {
-        this.toggleAttribute('invalid', !isValid, checkbox);
-      }
-      var label = this._getLabelElement();
-      this.toggleClass('error', !isValid, label);
-      var contentContainer = this.$.contentContainer;
-      this.toggleClass('error', !isValid, contentContainer);
-    },
     _getCheckboxElement: function () {
       var selector = this.xtype === "" ? "paper-checkbox" : "paper-toggle-button";
       var checkbox = this.$$(selector);
