@@ -154,7 +154,7 @@
 
     },
     observers: [
-      '_internalUpdateValidState(disabled, hide)'
+      '_internalUpdateValidState(disabled)'
     ],
     $meta: [{
       title: "Checkbox",
@@ -196,7 +196,7 @@
       this.toggleClass('hidden', newValue, atContainer);
     },
 
-    _internalUpdateValidState: function (disabled, hide) {
+    _internalUpdateValidState: function (disabled) {
       if (!this._isReady) { return; }
       this.validate();
     },
