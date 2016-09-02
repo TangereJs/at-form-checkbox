@@ -186,6 +186,9 @@
 
       this.addEventListener('keypress', function(event) {
         var keyCode = event.keyCode;
+        
+        // cancel Enter keypress event as this will cause that iron-button-state.html 
+        // will change the value async, breaking validation
         if (keyCode === 13) {
           event.stopPropagation();
         }
