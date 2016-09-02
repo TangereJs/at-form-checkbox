@@ -50,14 +50,14 @@
           assert.equal(false, isValid, "element is valid");
 
           var hint = Polymer.dom(element.$.hint);
-          assert.equal('', hint.textContent, 'Error message not set correctly');
+          assert.equal(hint.textContent, '', 'Error message not set correctly');
 
           // if validate is called again with showError = true error message should be displayed
           var isValid = element.validate(true);
           assert.equal(false, isValid, "element is valid");
 
           var hint = Polymer.dom(element.$.hint);
-          assert.equal('lorem ipsum', hint.textContent, 'Error message not set correctly');
+          assert.equal(hint.textContent, 'lorem ipsum', 'Error message not set correctly');
         });
 
         test('no autovalidate, do show errors', function () {
@@ -68,14 +68,14 @@
           assert.equal(false, isValid, "element is valid");
 
           var hint = Polymer.dom(element.$.hint);
-          assert.equal('lorem ipsum', hint.textContent, 'Error message not set correctly');
+          assert.equal(hint.textContent, 'lorem ipsum', 'Error message not set correctly');
 
           // if validate is called again with showError = false error message should still be visible
           var isValid = element.validate();
           assert.equal(false, isValid, "element is valid");
 
           var hint = Polymer.dom(element.$.hint);
-          assert.equal('lorem ipsum', hint.textContent, 'Error message not set correctly');
+          assert.equal(hint.textContent, 'lorem ipsum', 'Error message not set correctly');
         });
 
         test('autovalidate, do not show errors', function () {
@@ -86,14 +86,14 @@
           assert.equal(false, isValid, "element is valid");
 
           var hint = Polymer.dom(element.$.hint);
-          assert.equal('lorem ipsum', hint.textContent, 'Error message not set correctly');
+          assert.equal(hint.textContent, 'lorem ipsum', 'Error message not set correctly');
 
           // if validate is called again with showError = true error message should be displayed
           var isValid = element.validate(true);
           assert.equal(false, isValid, "element is valid");
 
           var hint = Polymer.dom(element.$.hint);
-          assert.equal('lorem ipsum', hint.textContent, 'Error message not set correctly');
+          assert.equal(hint.textContent, 'lorem ipsum', 'Error message not set correctly');
         });
 
         test('autovalidate, do show errors', function () {
@@ -104,14 +104,14 @@
           assert.equal(false, isValid, "element is valid");
 
           var hint = Polymer.dom(element.$.hint);
-          assert.equal('lorem ipsum', hint.textContent, 'Error message not set correctly');
+          assert.equal(hint.textContent, 'lorem ipsum', 'Error message not set correctly');
 
           // if validate is called again with showError = false error message should still be visible
           var isValid = element.validate();
           assert.equal(false, isValid, "element is valid");
 
           var hint = Polymer.dom(element.$.hint);
-          assert.equal('lorem ipsum', hint.textContent, 'Error message not set correctly');
+          assert.equal(hint.textContent, 'lorem ipsum', 'Error message not set correctly');
         });
 
       });
@@ -126,14 +126,14 @@
           assert.equal(false, isValid, "element is valid");
 
           var hint = Polymer.dom(element.$.hint);
-          assert.equal('', hint.textContent, 'Error message not set correctly');
+          assert.equal(hint.textContent, '', 'Error message not set correctly');
 
           // if validate is called again with showError = true error message should be displayed
           var isValid = element.validate(true);
           assert.equal(false, isValid, "element is valid");
 
           var hint = Polymer.dom(element.$.hint);
-          assert.equal('lorem ipsum', hint.textContent, 'Error message not set correctly');
+          assert.equal(hint.textContent, 'lorem ipsum', 'Error message not set correctly');
         });
 
         test('no autovalidate, do show errors', function () {
@@ -144,14 +144,14 @@
           assert.equal(false, isValid, "element is valid");
 
           var hint = Polymer.dom(element.$.hint);
-          assert.equal('lorem ipsum', hint.textContent, 'Error message not set correctly');
+          assert.equal(hint.textContent, 'lorem ipsum', 'Error message not set correctly');
 
           // if validate is called again with showError = false error message should still be visible
           var isValid = element.validate();
           assert.equal(false, isValid, "element is valid");
 
           var hint = Polymer.dom(element.$.hint);
-          assert.equal('lorem ipsum', hint.textContent, 'Error message not set correctly');
+          assert.equal(hint.textContent, 'lorem ipsum', 'Error message not set correctly');
         });
 
         test('autovalidate, do not show errors', function () {
@@ -163,14 +163,14 @@
           assert.equal(false, isValid, "element is valid");
 
           var hint = Polymer.dom(element.$.hint);
-          assert.equal('lorem ipsum', hint.textContent, 'Error message not set correctly');
+          assert.equal(hint.textContent, 'lorem ipsum', 'Error message not set correctly');
 
           // if validate is called again with showError = true error message should be displayed
           var isValid = element.validate(true);
           assert.equal(false, isValid, "element is valid");
 
           var hint = Polymer.dom(element.$.hint);
-          assert.equal('lorem ipsum', hint.textContent, 'Error message not set correctly');
+          assert.equal(hint.textContent, 'lorem ipsum', 'Error message not set correctly');
         });
 
         test('autovalidate, do show errors', function () {
@@ -182,14 +182,14 @@
           assert.equal(false, isValid, "element is valid");
 
           var hint = Polymer.dom(element.$.hint);
-          assert.equal('lorem ipsum', hint.textContent, 'Error message not set correctly');
+          assert.equal(hint.textContent, 'lorem ipsum', 'Error message not set correctly');
 
           // if validate is called again with showError = false error message should still be visible
           var isValid = element.validate();
           assert.equal(false, isValid, "element is valid");
 
           var hint = Polymer.dom(element.$.hint);
-          assert.equal('lorem ipsum', hint.textContent, 'Error message not set correctly');
+          assert.equal(hint.textContent, 'lorem ipsum', 'Error message not set correctly');
         });
 
       });
