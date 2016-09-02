@@ -183,6 +183,14 @@
     },
 
     ready: function () {
+
+      this.addEventListener('keypress', function(event) {
+        var keyCode = event.keyCode;
+        if (keyCode === 13) {
+          event.stopPropagation();
+        }
+      });
+
       this._isReady = true;
       this._internalUpdateValidState(this.disabled, this.hide);
     },
