@@ -153,9 +153,6 @@
       }
 
     },
-    observers: [
-      '_internalUpdateValidState(disabled)'
-    ],
     $meta: [{
       title: "Checkbox",
       type: "boolean"
@@ -186,8 +183,8 @@
 
       this.addEventListener('keypress', function(event) {
         var keyCode = event.keyCode;
-        
-        // cancel Enter keypress event as this will cause that iron-button-state.html 
+
+        // cancel Enter keypress event as this will cause that iron-button-state.html
         // will change the value async, breaking validation
         if (keyCode === 13) {
           event.stopPropagation();
@@ -195,7 +192,6 @@
       });
 
       this._isReady = true;
-      this._internalUpdateValidState(this.disabled, this.hide);
     },
 
     attached: function () {
@@ -205,11 +201,6 @@
     _hideChanged: function (newValue, oldValue) {
       var atContainer = this.$.atContainer;
       this.toggleClass('hidden', newValue, atContainer);
-    },
-
-    _internalUpdateValidState: function (disabled) {
-      if (!this._isReady) { return; }
-      this.validate();
     },
 
     validate: function (showError) {
