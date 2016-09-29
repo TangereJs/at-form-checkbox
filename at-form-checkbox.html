@@ -98,13 +98,22 @@
     is: "at-form-checkbox",
     behaviors: [ Tangere.behaviors.formUIGeneric, Tangere.behaviors.i18n ],
     properties: {
+
+      /**
+       * @property label
+       * @type String
+       * @default ""
+       */
       label: {
         type: String,
         value: '',
         title: 'Label'
       },
+
       /**
        * @property hideLabel
+       * @type Boolean
+       * @default false
        */
       hideLabel: {
         type: Boolean,
@@ -113,17 +122,23 @@
         title: 'Do not show the label'
       },
 
+      /**
+       * @property disabled
+       * @type Boolean
+       * @default false
+       */
       disabled: {
         type: Boolean,
         value: false,
         title: 'Field value can not be changed'
       },
+
       /**
-       * Hides the element. When hidden nothing is displayed for the element
-       * @property hide
-       * @type Boolean
-       * @default false
-       */
+      * Hides the element. When hidden nothing is displayed for the element
+      * @property hide
+      * @type Boolean
+      * @default false
+      */
       hide: {
         type: Boolean,
         value: false,
@@ -131,6 +146,22 @@
         title: 'Field is invisible'
       },
 
+      /**
+       * @property required
+       * @type Boolean
+       * @default false
+       */
+      required: {
+        type: Boolean,
+        value: false,
+        title: 'Checking is mandatory'
+      },
+
+      /**
+       * @property value
+       * @type Object
+       * @default false
+       */
       value: {
         type: Object,
         value: false,
@@ -138,6 +169,11 @@
         title: 'Value'
       },
 
+      /**
+       * @property xtype
+       * @type String
+       * @default ""
+       */
       xtype: {
         type: String,
         value: '',
@@ -153,6 +189,11 @@
       }
 
     },
+
+    observers: [
+      '_internalValidStateUpdate(required)'
+    ],
+
     $meta: [{
       title: "Checkbox",
       type: "boolean"
@@ -192,6 +233,7 @@
       });
 
       this._isReady = true;
+      this._internalValidStateUpdate(this.required);
     },
 
     attached: function () {
@@ -203,10 +245,29 @@
       this.toggleClass('hidden', newValue, atContainer);
     },
 
+    _internalValidStateUpdate: function(required) {
+      if (this._isReady) {
+        this.validate();
+      }
+    },
+
     validate: function (showError) {
       if (showError === undefined) { showError = this.autovalidate; }
       var validationResult = this._validateBaseData();
       if (showError) { this._handleValidationResult(validationResult); }
+
+      if (!validationResult.isValid) {
+        return validationResult.isValid;
+      }
+
+      // validate required
+      var parsedValue = this._AT3ParseBool(this.value);
+      validationResult.isValid = !this.required || parsedValue === true;
+      if (!validationResult.isValid) {
+        validationResult.errorMessage = this.T("This field is required.");
+      }
+      if (showError) { this._handleValidationResult(validationResult); }
+
       return validationResult.isValid;
     },
 
@@ -222,15 +283,11 @@
     },
 
     _valueChanged: function (newValue, oldValue) {
-      if (!this._isReady) {
-        return;
+      this._updateUIForValue(newValue);
+
+      if (this._isReady) {
+        this._fireValueChangedEvent(newValue);
       }
-
-      var parsedValue = this._AT3ParseBool(newValue);
-
-      this._updateUIForValue(parsedValue);
-
-      this.fire('value-changed', { value: newValue });
     },
     _updateUIForValue: function (value) {
       var parsedValue = this._AT3ParseBool(value);

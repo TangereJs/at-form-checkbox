@@ -111,7 +111,19 @@
       });
 
       test('required sets validation message', function() {
-        /* required doesn't make sense for at-form-checkbox */
+        var element = fixture('required');
+
+        assert.equal(element.required, true, 'required value not set correctly');
+        assert.equal(element.value, false, 'initial value not correct');
+
+        assert.equal(element.valid, false, 'element is valid');
+        assert.equal(element.validate(), false, 'element is valid');
+
+        element.value = true;
+        assert.equal(element.value, true, 'value not correct');
+
+        assert.equal(element.valid, true, 'element is invalid');
+        assert.equal(element.validate(), true, 'element is invalid');
       });
 
       test('disabled sets css classes', function() {
@@ -131,12 +143,38 @@
         assert.equal(displayValue, "none", "container is not hidden");
       });
 
-      test('required and disabled => valid = true', function() {
-        /* required doesn't make sense for at-form-checkbox */
+      test('required and disabled => valid = false', function() {
+        var element = fixture('requiredAndDisabled');
+
+        assert.equal(element.disabled, true, 'element is enabled');
+        assert.equal(element.required, true, 'required value not set correctly');
+        assert.equal(element.value, false, 'initial value not correct');
+
+        assert.equal(element.valid, false, 'element is valid');
+        assert.equal(element.validate(), false, 'element is valid');
+
+        element.value = true;
+        assert.equal(element.value, true, 'value not correct');
+
+        assert.equal(element.valid, true, 'element is invalid');
+        assert.equal(element.validate(), true, 'element is invalid');
       });
 
       test('required and hidden => valid = true', function() {
-        /* required doesn't make sense for at-form-checkbox */
+        var element = fixture('requiredAndHidden');
+
+        assert.equal(element.hide, true, 'element is visible');
+        assert.equal(element.required, true, 'required value not set correctly');
+        assert.equal(element.value, false, 'initial value not correct');
+
+        assert.equal(element.valid, false, 'element is valid');
+        assert.equal(element.validate(), false, 'element is valid');
+
+        element.value = true;
+        assert.equal(element.value, true, 'value not correct');
+
+        assert.equal(element.valid, true, 'element is invalid');
+        assert.equal(element.validate(), true, 'element is invalid');
       });
 
       test('errorMessage => valid = false', function() {

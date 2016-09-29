@@ -45,18 +45,6 @@
     </template>
   </test-fixture>
 
-  <test-fixture id="attrNullValueAndMaxChars">
-    <template>
-      <at-form-checkbox max-chars="2" value=null></at-form-checkbox>
-    </template>
-  </test-fixture>
-
-  <test-fixture id="attrNullStringValueAndMaxChars">
-    <template>
-      <at-form-checkbox max-chars="2" value="null"></at-form-checkbox>
-    </template>
-  </test-fixture>
-
   <script>
     suite('null value tests', function() {
 
@@ -104,6 +92,71 @@
 
         flush(function() {
           assert.equal(eventCount, 1);
+          done();
+        });
+      });
+
+      test('required and attribute value set to null', function (done) {
+        var input = fixture('attrNullValueAndRequired');
+
+        assert.equal(input.required, true, 'required not set correctly');
+        assert.equal(input.value, null, 'value not set correctly');
+        assert.equal(input.valid, false, 'value not set correctly');
+
+        var eventCount = 0;
+        var expectedValue;
+        input.addEventListener('value-changed', function(event) {
+          assert.equal(event.detail.value, expectedValue, 'event detail value not set correctly');
+          assert.equal(input.value, expectedValue, 'event detail value not set correctly');
+          assert.equal(input.valid, true, 'value not set correctly');
+          eventCount += 1;
+        });
+
+        expectedValue = 'true';
+        input.value = 'true';
+        // expectedValue is true because of attribute deserialization
+        expectedValue = true;
+        Polymer.dom(input).setAttribute('value', 'true');
+
+
+        expectedValue = true;
+        input.value = true;
+        Polymer.dom(input).setAttribute('value', true);
+
+        flush(function() {
+          assert.equal(eventCount, 2);
+          done();
+        });
+      });
+
+      test('required and attribute value set to "null"', function (done) {
+        var input = fixture('attrNullValueAndRequired');
+
+        assert.equal(input.required, true, 'required not set correctly');
+        assert.equal(input.value, null, 'value not set correctly');
+        assert.equal(input.valid, false, 'value not set correctly');
+
+        var eventCount = 0;
+        var expectedValue;
+        input.addEventListener('value-changed', function(event) {
+          assert.equal(event.detail.value, expectedValue, 'event detail value not set correctly');
+          assert.equal(input.value, expectedValue, 'event detail value not set correctly');
+          assert.equal(input.valid, true, 'value not set correctly');
+          eventCount += 1;
+        });
+
+        expectedValue = 'true';
+        input.value = 'true';
+        // expectedValue is true because of attribute deserialization
+        expectedValue = true;
+        Polymer.dom(input).setAttribute('value', 'true');
+
+        expectedValue = true;
+        input.value = true;
+        Polymer.dom(input).setAttribute('value', true);
+
+        flush(function() {
+          assert.equal(eventCount, 2);
           done();
         });
       });
@@ -160,6 +213,72 @@
 
         flush(function() {
           assert.equal(eventCount, 1);
+          done();
+        });
+      });
+
+      test('required and property value set to null', function (done) {
+        var input = document.createElement('at-form-checkbox');
+        input.required = true;
+        input.value = null;
+
+        assert.equal(input.required, true, 'required not set correctly');
+        assert.equal(input.value, null, 'value not set correctly');
+        assert.equal(input.valid, false, 'value not set correctly');
+
+        var eventCount = 0;
+        var expectedValue;
+        input.addEventListener('value-changed', function(event) {
+          assert.equal(event.detail.value, expectedValue, 'event detail value not set correctly');
+          assert.equal(input.value, expectedValue, 'event detail value not set correctly');
+          assert.equal(input.valid, true, 'value not set correctly');
+          eventCount += 1;
+        });
+
+        expectedValue = 'true';
+        input.value = 'true';
+        expectedValue = true;
+        Polymer.dom(input).setAttribute('value', 'true');
+
+        input.value = true;
+        Polymer.dom(input).setAttribute('value', true);
+
+        flush(function() {
+          assert.equal(eventCount, 2);
+          done();
+        });
+      });
+
+      test('required and property value set to "null"', function (done) {
+        var input = document.createElement('at-form-checkbox');
+        input.required = true;
+        input.value = "null";
+
+        assert.equal(input.required, true, 'required not set correctly');
+        assert.equal(input.value, 'null', 'value not set correctly');
+        assert.equal(input.valid, true, 'value not set correctly');
+
+        var eventCount = 0;
+        var expectedValue;
+        input.addEventListener('value-changed', function(event) {
+          assert.equal(event.detail.value, expectedValue, 'event detail value not set correctly');
+          assert.equal(input.value, expectedValue, 'event detail value not set correctly');
+          assert.equal(input.valid, true, 'value not set correctly');
+          eventCount += 1;
+        });
+
+        expectedValue = 'true';
+        input.value = 'true';
+
+        expectedValue = true;
+        Polymer.dom(input).setAttribute('value', 'true');
+
+        expectedValue = true;
+        input.value = true;
+        Polymer.dom(input).setAttribute('value', true);
+
+        flush(function() {
+          assert.equal(eventCount, 2);
           done();
         });
       });
