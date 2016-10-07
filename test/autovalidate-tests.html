@@ -50,7 +50,7 @@
           assert.equal(false, isValid, "element is valid");
 
           var hint = Polymer.dom(element.$.hint);
-          assert.equal(hint.textContent, '', 'Error message not set correctly');
+          assert.equal(hint.textContent, 'lorem ipsum', 'Error message not set correctly');
 
           // if validate is called again with showError = true error message should be displayed
           var isValid = element.validate(true);
@@ -126,7 +126,7 @@
           assert.equal(false, isValid, "element is valid");
 
           var hint = Polymer.dom(element.$.hint);
-          assert.equal(hint.textContent, '', 'Error message not set correctly');
+          assert.equal(hint.textContent, 'lorem ipsum', 'Error message not set correctly');
 
           // if validate is called again with showError = true error message should be displayed
           var isValid = element.validate(true);

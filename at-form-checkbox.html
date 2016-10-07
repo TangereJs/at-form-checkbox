@@ -254,7 +254,7 @@
     validate: function (showError) {
       if (showError === undefined) { showError = this.autoValidate; }
       var validationResult = this._validateBaseData();
-      if (showError) { this._handleValidationResult(validationResult); }
+      this._handleValidationResult(validationResult);
 
       if (!validationResult.isValid) {
         return validationResult.isValid;
@@ -286,6 +286,8 @@
       this._updateUIForValue(newValue);
 
       if (this._isReady) {
+        if (this.autoValidate) { this.validate(true); }
+
         this._fireValueChangedEvent(newValue);
       }
     },
