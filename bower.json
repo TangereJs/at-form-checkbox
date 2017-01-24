@@ -8,7 +8,6 @@
     "at-i18n": "TangereJs/at-i18n#master",
     "paper-checkbox": "PolymerElements/paper-checkbox#master",
     "paper-toggle-button": "PolymerElements/paper-toggle-button#master",
-    "iron-label": "PolymerElements/iron-label#master",
     "at-doc-viewer": "TangereJs/at-doc-viewer#master"
   },
   "version": "0.0.1.55"
