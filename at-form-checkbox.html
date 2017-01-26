@@ -4,6 +4,7 @@
 <link rel="import" href="../at-i18n/at-i18n-behavior.html">
 <link rel="import" href="../paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../iron-label/iron-label.html">
 
 <dom-module id="at-form-checkbox">
   <template>
@@ -77,12 +78,12 @@
       <div id="contentContainer" class="at-content-container">
         <template is="dom-if" if="{{_isCheckbox(xtype)}}" on-dom-change="_templateOnDomChange">
           <paper-checkbox id="checkbox" disabled$="{{disabled}}" noink on-change="_onCheckboxChange" on-focus="_onCheckboxFocus">
-            <label id="cbLabel">{{label}}</label>
+            <iron-label id="cbLabel">{{label}}</iron-label>
           </paper-checkbox>
         </template>
         <template is="dom-if" if="{{_isToggle(xtype)}}" on-dom-change="_templateOnDomChange">
           <paper-toggle-button id="checkbox" disabled$="{{disabled}}" noink on-change="_onCheckboxChange" on-focus="_onCheckboxFocus">
-            <label id="tbLabel">{{label}}</label>
+            <iron-label id="tbLabel">{{label}}</iron-label>
           </paper-toggle-button>
         </template>
       </div>
