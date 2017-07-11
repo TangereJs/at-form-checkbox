@@ -12,7 +12,7 @@
       <h4>Notifications</h4>
       <!-- in at-form-checkbox notify=true for value; {{ }} curly braces specify two way binding -->
       <!-- valueEcho will be updated when at-form-checkbox.value has changed -->
-      <at-form-checkbox value={{valueEcho}} label="Notify me about updates to apps or games that I've downloaded"></at-form-checkbox>
+      <at-form-checkbox value={{valueEcho}} on-value-changed="_logChange" label="Notify me about updates to apps or games that I've downloaded"></at-form-checkbox>
       <div>
         You <span id="will" class="hidden">will</span> <span id="willnot" class="hidden">won't</span> be notified about updates to apps or games that you have downloaded
       </div>
@@ -39,10 +39,14 @@
       this._isReady = true;
     },
     valueEchoChanged: function (newValue, oldValue) {
+      console.log("value-changed to " + newValue);
       if (this._isReady) {
         this.toggleClass('hidden', !this.valueEcho, this.$.will);
         this.toggleClass('hidden', this.valueEcho, this.$.willnot);
       }
+    },
+    _logChange: function(e) {
+      console.log("on-value-changed to " + e.detail.value);
     }
   });
 </script>
