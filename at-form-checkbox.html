@@ -334,9 +334,6 @@
       var value = event.target.checked;
       this.value = value;
       this.validate();
-      this.fire('value-changed', {
-        value: this.value
-      });
     },
     _onCheckboxFocus: function (event) {
       var target = event.target;
