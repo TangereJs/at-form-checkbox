@@ -186,6 +186,18 @@
           title: "Toggle",
           value: "toggle"
         }]
+      },
+
+      /**
+       * when negate is set the value is negated - so checked == false, unchecked == true
+       * 
+       * @property negate
+       * @type Boolean
+       * @default false 
+       */
+      negate: {
+        type: Boolean,
+        value: false
       }
 
     },
@@ -297,7 +309,7 @@
       var parsedValue = this._AT3ParseBool(value);
       var checkbox = this._getCheckboxElement();
       if (checkbox) {
-        checkbox.checked = parsedValue;
+        checkbox.checked = this.negate ? !parsedValue : parsedValue;
       }
     },
     focus: function () {
@@ -332,7 +344,7 @@
 
     _onCheckboxChange: function (event) {
       var value = event.target.checked;
-      this.value = value;
+      this.value = this.negate ? !value : value;
       this.validate();
     },
     _onCheckboxFocus: function (event) {

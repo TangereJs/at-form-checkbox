@@ -1,0 +1,79 @@
+<link rel="import" href="../../tangere/tangere.html" />
+<link rel="import" href="../../at-core-style-classes/at-core-style-classes.html" />
+<link rel="import" href="../at-form-checkbox.html" />
+
+<dom-module id="negate-demo">
+  <template>
+    <style include="at-core-style-classes">
+      :host {
+        display: block;
+        box-sizing: border-box;
+
+        margin: 0 auto;
+        width: 930px;
+      }
+
+      .row {
+        margin-top: 32px;
+      }
+    </style>
+    
+
+    <div class="row font-headline">Initial value is not set</div>
+
+    <div class="row">
+      <at-form-checkbox id="demo1" label="Negate not set" on-value-changed="_handleValueChanged"></at-form-checkbox>
+      <div class="font-body1">Value echo: <span id="demo1echo" class="font-body2"></span></div>
+    </div>
+
+    <div class="row">
+      <at-form-checkbox id="demo2" label="Negate set" negate on-value-changed="_handleValueChanged"></at-form-checkbox>
+      <div class="font-body1">Value echo: <span id="demo2echo" class="font-body2"></span></div>
+    </div>
+
+    <div class="row font-headline">Initial value is set</div>
+
+    <div class="row">
+      <at-form-checkbox id="demo3" label="Negate not set, initial value true" value="true" on-value-changed="_handleValueChanged"></at-form-checkbox>
+      <div class="font-body1">Value echo: <span id="demo3echo" class="font-body2"></span></div>
+    </div>
+
+    <div class="row">
+      <at-form-checkbox id="demo4" label="Negate set, initial value false" value="false"
+       negate on-value-changed="_handleValueChanged"></at-form-checkbox>
+      <div class="font-body1">Value echo: <span id="demo4echo" class="font-body2"></span></div>
+    </div>
+
+    <div class="row">
+      <at-form-checkbox id="demo5" label="Negate set, initial value true" value="true"
+       negate on-value-changed="_handleValueChanged"></at-form-checkbox>
+      <div class="font-body1">Value echo: <span id="demo5echo" class="font-body2"></span></div>
+    </div>
+
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: "negate-demo",
+    properties: {
+      
+    },
+    ready: function () {
+      this.$.demo1echo.textContent = this.$.demo1.value;
+      this.$.demo2echo.textContent = this.$.demo2.value;
+      this.$.demo3echo.textContent = this.$.demo3.value;
+      this.$.demo4echo.textContent = this.$.demo4.value;
+      this.$.demo5echo.textContent = this.$.demo5.value;
+    },
+
+    _handleValueChanged: function(event) {
+      var target = event.currentTarget;
+      var value = event.detail.value;
+
+      var id = target.id;
+      var echoId = id + "echo";
+
+      this.$[echoId].textContent = value;
+    }
+  });
+</script>
