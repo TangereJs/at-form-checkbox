@@ -139,7 +139,8 @@
         var input = fixture('hidden');
         assert.equal(input.hide, true, 'hide property is true');
         assert.equal(input.$.atContainer.classList.contains('hidden'), true, 'container doesn\'t have hidden class');
-        var displayValue = Polymer.Base.getComputedStyleValue.call(input.$.atContainer, "display");
+        var computedStyle = window.getComputedStyle(input.$.atContainer);
+        var displayValue = computedStyle.getPropertyValue("display");
         assert.equal(displayValue, "none", "container is not hidden");
       });
 
