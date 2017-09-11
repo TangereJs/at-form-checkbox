@@ -197,7 +197,8 @@
        */
       negate: {
         type: Boolean,
-        value: false
+        value: false,
+        observer: '_negateChanged'
       }
 
     },
@@ -311,6 +312,9 @@
       if (checkbox) {
         checkbox.checked = this.negate ? !parsedValue : parsedValue;
       }
+    },
+    _negateChanged: function(newValue, oldValue) {
+      this._updateUIForValue(this.value);
     },
     focus: function () {
       var checkbox = this._getCheckboxElement();
