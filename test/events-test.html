@@ -15,7 +15,7 @@
   <script src="../../iron-test-helpers/mock-interactions.js"></script>
 
   <link rel="import" href="../at-form-checkbox.html">
-
+  <link rel="import" href="../../at-core-view/at-core-view.html" />
 </head>
 <body>
 
@@ -113,7 +113,39 @@
       });
 
     });
+
+    suite('at-core-view tests', function() {
+      test('at-form-checkbox does not trigger value-changed in at-core-view when value is set as attribute', function(done) {
+
+
+        var parentDiv = document.createElement('div');
+        var coreView = document.createElement('at-core-view');
+        parentDiv.appendChild(coreView);
+        var view =
+          '<at-form-checkbox value="true" xtype="toggle"></at-form-checkbox>'+
+          '<at-form-checkbox value="false"></at-form-checkbox>'+
+          '<at-form-checkbox value="false" xtype="toggle"></at-form-checkbox>'+
+          '<at-form-checkbox value="true"></at-form-checkbox>'
+        ;
+
+        var eventCount = 0;
+        coreView.root.addEventListener('value-changed', function(event) {
+          assert.equal(event.detail.value, true);
+          eventCount += 1;
+        });
+
+        coreView.addEventListener('content-changed', function(event) {
+          assert.equal(eventCount, 0);
+          done();
+        });
+
+        coreView.view = view;
+
+      });
+    });
+
   </script>
 
 </body>
 </html>
+

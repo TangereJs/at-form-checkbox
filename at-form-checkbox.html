@@ -77,12 +77,12 @@
     <div id="atContainer" class="at-container">
       <div id="contentContainer" class="at-content-container">
         <template is="dom-if" if="{{_isCheckbox(xtype)}}" on-dom-change="_templateOnDomChange">
-          <paper-checkbox id="checkbox" disabled$="{{disabled}}" noink on-change="_onCheckboxChange" on-focus="_onCheckboxFocus">
+          <paper-checkbox id="checkbox" disabled$="{{disabled}}" noink on-focus="_onCheckboxFocus">
             <iron-label id="cbLabel">{{label}}</iron-label>
           </paper-checkbox>
         </template>
         <template is="dom-if" if="{{_isToggle(xtype)}}" on-dom-change="_templateOnDomChange">
-          <paper-toggle-button id="checkbox" disabled$="{{disabled}}" noink on-change="_onCheckboxChange" on-focus="_onCheckboxFocus">
+          <paper-toggle-button id="checkbox" disabled$="{{disabled}}" noink on-focus="_onCheckboxFocus">
             <iron-label id="tbLabel">{{label}}</iron-label>
           </paper-toggle-button>
         </template>
@@ -190,10 +190,10 @@
 
       /**
        * when negate is set the value is negated - so checked == false, unchecked == true
-       * 
+       *
        * @property negate
        * @type Boolean
-       * @default false 
+       * @default false
        */
       negate: {
         type: Boolean,
@@ -344,6 +344,14 @@
       this._updateUIForValue(this.value);
       this._updateUIValidState(this.valid);
       this._hideLabelChanged(this.hideLabel, undefined);
+
+      if (!this._boundCheckboxChangeEventHandler) {
+        this._boundCheckboxChangeEventHandler = this._onCheckboxChange.bind(this);
+      }
+      var cElt = this._getCheckboxElement();
+      if (!cElt) return;
+      cElt.removeEventListener('change', this._boundCheckboxChangeEventHandler);
+      cElt.addEventListener('change', this._boundCheckboxChangeEventHandler);
     },
 
     _onCheckboxChange: function (event) {
