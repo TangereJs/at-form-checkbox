@@ -46,7 +46,7 @@
   </test-fixture>
 
   <script>
-    suite('null value tests', function() {
+    suite('null tests value set as attribute', function() {
 
       test('attribute value set to null', function(done) {
         var input = fixture('attrNullValue');
@@ -96,7 +96,7 @@
         });
       });
 
-      test('required and attribute value set to null', function (done) {
+      test('required and attribute value set to null', function(done) {
         var input = fixture('attrNullValueAndRequired');
 
         assert.equal(input.required, true, 'required not set correctly');
@@ -129,7 +129,7 @@
         });
       });
 
-      test('required and attribute value set to "null"', function (done) {
+      test('required and attribute value set to "null"', function(done) {
         var input = fixture('attrNullValueAndRequired');
 
         assert.equal(input.required, true, 'required not set correctly');
@@ -161,6 +161,9 @@
         });
       });
 
+    });
+
+    suite('null tests value set as property', function() {
       /********************************************************************************/
       /* Property value tests
       /********************************************************************************/
@@ -217,7 +220,7 @@
         });
       });
 
-      test('required and property value set to null', function (done) {
+      test('required and property value set to null', function(done) {
         var input = document.createElement('at-form-checkbox');
         input.required = true;
         input.value = null;
@@ -249,7 +252,7 @@
         });
       });
 
-      test('required and property value set to "null"', function (done) {
+      test('required and property value set to "null"', function(done) {
         var input = document.createElement('at-form-checkbox');
         input.required = true;
         input.value = "null";
