@@ -31,8 +31,13 @@
     </template>
   </test-fixture>
 
-  <script>
+  <test-fixture id="parentDiv">
+    <template>
+      <div></div>
+    </template>
+  </test-fixture>
 
+  <script>
     suite('events tests', function() {
 
       test('setting .value trigger value-changed event', function(done) {
@@ -116,11 +121,10 @@
 
     suite('at-core-view tests', function() {
       test('at-form-checkbox does not trigger value-changed in at-core-view when value is set as attribute', function(done) {
-
-
-        var parentDiv = document.createElement('div');
+        var parentDiv = fixture('parentDiv');
         var coreView = document.createElement('at-core-view');
         parentDiv.appendChild(coreView);
+
         var view =
           '<at-form-checkbox value="true" xtype="toggle"></at-form-checkbox>'+
           '<at-form-checkbox value="false"></at-form-checkbox>'+
