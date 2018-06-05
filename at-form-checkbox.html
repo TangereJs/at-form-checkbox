@@ -293,7 +293,7 @@
       }
       var label = this._getLabelElement();
       this.toggleClass('error', !isValid, label);
-      var contentContainer = this.$.contentContainer;
+      var contentContainer = this.$ && this.$.contentContainer;
       this.toggleClass('error', !isValid, contentContainer);
     },
 
