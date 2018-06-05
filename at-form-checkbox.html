@@ -15,9 +15,9 @@
       }
 
       :host {
-        @apply(--at-form-host);
-        @apply(--layout-vertical);
-        @apply(--layout-justified);
+        @apply --at-form-host;
+        @apply --layout-vertical;
+        @apply --layout-justified;
         min-height:24px;
       }
 
@@ -30,7 +30,7 @@
       }
 
       #cbLabel {
-        @apply(--at-form-label);
+        @apply --at-form-label;
       }
 
       #cbLabel.hidden {
@@ -38,7 +38,7 @@
       }
 
       #tbLabel {
-        @apply(--at-form-label);
+        @apply --at-form-label;
       }
 
       #tbLabel.hidden {
@@ -46,8 +46,8 @@
       }
 
       #atContainer {
-        @apply(--layout-flex);
-        @apply(--layout-vertical);
+        @apply --layout-flex;
+        @apply --layout-vertical;
       }
 
       #atContainer.hidden {
@@ -59,9 +59,9 @@
       }
 
       #contentContainer {
-        @apply(--layout-flex);
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
+        @apply --layout-flex;
+        @apply --layout-horizontal;
+        @apply --layout-center;
       }
 
       papger-toggle-button,
@@ -214,7 +214,7 @@
     }, {
       title: "Toggle",
       type: "boolean",
-      xtype: "toggle"      ,
+      xtype: "toggle",
       icon: "now:toggle"
     }],
     _isCheckbox: function (xtype) {
