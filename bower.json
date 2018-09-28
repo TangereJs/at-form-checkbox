@@ -6,10 +6,10 @@
     "at-theme": "TangereJs/at-theme#master",
     "at-form-behaviors": "TangereJs/at-form-behaviors#master",
     "at-i18n": "TangereJs/at-i18n#master",
-    "paper-checkbox": "PolymerElements/paper-checkbox#master",
-    "paper-toggle-button": "PolymerElements/paper-toggle-button#master",
+    "paper-checkbox": "PolymerElements/paper-checkbox#^2.0.0",
+    "paper-toggle-button": "PolymerElements/paper-toggle-button#^2.0.0",
     "at-doc-viewer": "TangereJs/at-doc-viewer#master",
-    "iron-label": "PolymerElements/iron-label#master"
+    "iron-label": "PolymerElements/iron-label#^2.0.0"
   },
   "version": "0.0.1.55"
 }
