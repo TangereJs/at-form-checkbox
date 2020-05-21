@@ -72,6 +72,24 @@
       paper-toggle-button[disabled] iron-label {
         opacity: 0.65;
       }
+
+      paper-toggle-button.success {
+        --paper-toggle-button-checked-bar-color: var(--at-success);
+        --paper-toggle-button-checked-button-color: var(--at-success);
+        --paper-toggle-button-checked-ink-color: var(--at-success);
+        --paper-toggle-button-unchecked-bar-color: var(--at-success);
+        --paper-toggle-button-unchecked-button-color: var(--at-success);
+        --paper-toggle-button-unchecked-ink-color: var(--at-success);
+      }
+
+      paper-toggle-button.error {
+        --paper-toggle-button-checked-bar-color: var(--at-error);
+        --paper-toggle-button-checked-button-color: var(--at-error);
+        --paper-toggle-button-checked-ink-color: var(--at-error);
+        --paper-toggle-button-unchecked-bar-color: var(--at-error);
+        --paper-toggle-button-unchecked-button-color: var(--at-error);
+        --paper-toggle-button-unchecked-ink-color: var(--at-error);
+      }
     </style>
 
     <div id="atContainer" class="at-container">
@@ -185,7 +203,7 @@
         }, {
           title: "Toggle",
           value: "toggle"
-        }]
+          }]
       },
 
       /**
@@ -199,8 +217,19 @@
         type: Boolean,
         value: false,
         observer: '_negateChanged'
-      }
+      },
 
+      toggleColor: {
+        type: String,
+        xtype: 'enum',
+        xvaluelist: [
+          { title: 'Default', value: '0' },
+          { title: 'Success', value: '1' },
+          { title: 'Error', value: '2' },
+        ],
+        value: '0',
+        observer: '_toggleColorChanged'
+      },
     },
 
     observers: [
@@ -306,6 +335,7 @@
         this._fireValueChangedEvent(newValue);
       }
     },
+
     _updateUIForValue: function (value) {
       var parsedValue = this._AT3ParseBool(value);
       var checkbox = this._getCheckboxElement();
@@ -313,15 +343,33 @@
         checkbox.checked = this.negate ? !parsedValue : parsedValue;
       }
     },
+
     _negateChanged: function(newValue, oldValue) {
       this._updateUIForValue(this.value);
     },
+
     focus: function () {
       var checkbox = this._getCheckboxElement();
       if (checkbox) {
         Polymer.dom(checkbox).setAttribute('focused', true);
       }
     },
+
+    _toggleColorChanged: function (newValue, oldValue) {
+      var checkbox = this._getCheckboxElement();
+
+      if (checkbox == null) return;
+
+      checkbox.classList.remove('success');
+      checkbox.classList.remove('error');
+
+      if (newValue == '1') 
+        checkbox.classList.add('success');
+
+      if (newValue == '2') 
+        checkbox.classList.add('error');
+    },
+
     // *ij* see https://adenin.atlassian.net/browse/AT-3 to understand why this function exists and what it does
     _AT3ParseBool: function (value) {
       // Boolean(value) covers true, false, 1 and 0 but doesn't work for "0" and "1" or "true" or "false"
@@ -359,6 +407,7 @@
       this.value = this.negate ? !value : value;
       this.validate();
     },
+
     _onCheckboxFocus: function (event) {
       var target = event.target;
 
@@ -374,11 +423,13 @@
       var checkbox = this.$$(selector);
       return checkbox;
     },
+
     _getLabelElement: function () {
       var selector = this.xtype === "" ? '#cbLabel' : '#tbLabel';
       var label = this.$$(selector);
       return label;
     },
+
     _getFocusableElement: function () {
       var focusable = this._getCheckboxElement();
       return focusable;
