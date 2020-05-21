@@ -73,7 +73,7 @@
         opacity: 0.65;
       }
 
-      paper-toggle-button.success {
+      paper-toggle-button.success[checked] {
         --paper-toggle-button-checked-bar-color: var(--at-success);
         --paper-toggle-button-checked-button-color: var(--at-success);
         --paper-toggle-button-checked-ink-color: var(--at-success);
@@ -82,7 +82,7 @@
         --paper-toggle-button-unchecked-ink-color: var(--at-success);
       }
 
-      paper-toggle-button.error {
+      paper-toggle-button.error[checked] {
         --paper-toggle-button-checked-bar-color: var(--at-error);
         --paper-toggle-button-checked-button-color: var(--at-error);
         --paper-toggle-button-checked-ink-color: var(--at-error);
@@ -356,6 +356,10 @@
     },
 
     _toggleColorChanged: function (newValue, oldValue) {
+      this._applyToggleColor();
+    },
+
+    _applyToggleColor: function () {
       var checkbox = this._getCheckboxElement();
 
       if (checkbox == null) return;
@@ -363,10 +367,10 @@
       checkbox.classList.remove('success');
       checkbox.classList.remove('error');
 
-      if (newValue == '1') 
+      if (this.toggleColor == '1')
         checkbox.classList.add('success');
 
-      if (newValue == '2') 
+      if (this.toggleColor == '2')
         checkbox.classList.add('error');
     },
 
@@ -392,6 +396,10 @@
       this._updateUIForValue(this.value);
       this._updateUIValidState(this.valid);
       this._hideLabelChanged(this.hideLabel, undefined);
+
+      // apply toggleColor classes when the element renders
+      if (this.xtype == 'toggle')
+        this._applyToggleColor();
 
       if (!this._boundCheckboxChangeEventHandler) {
         this._boundCheckboxChangeEventHandler = this._onCheckboxChange.bind(this);
